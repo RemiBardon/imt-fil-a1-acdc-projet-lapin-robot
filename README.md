@@ -159,9 +159,9 @@ package code_metier_lapin_robot {
         + getAllPoints(mesure: Mesure, tag: Optional<Tag>): Dictionary<DataType, DataPoint[]>
         + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
 
-        + getValueRange(points: DataPoint[]): Range<float>
-        + getValueRange<T>(points: Dictionary<T, DataPoint[]>): Dictionary<T, Range<float>>
-        + getValueRange<S, T>(points: Dictionary<S, Dictionary<T, DataPoint[]>>): Dictionary<S, Dictionary<T, Range<float>>>
+        + getValueRange(points: DataPoint[]): Range<Float>
+        + getValueRange<T>(points: Dictionary<T, DataPoint[]>): Dictionary<T, Range<Float>>
+        + getValueRange<S, T>(points: Dictionary<S, Dictionary<T, DataPoint[]>>): Dictionary<S, Dictionary<T, Range<Float>>>
 
         + getOmittedRanges(): Range<Date>[]
         + getOmittedPoints(range: Range<Date>): Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
