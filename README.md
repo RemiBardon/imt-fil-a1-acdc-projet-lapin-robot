@@ -122,8 +122,8 @@ package code_metier_lapin_robot {
     }
 
     class Tag {
-        - value: string
-        ~ Tag(value: string)
+        - value: String
+        ~ Tag(value: String)
         + {static} preparation(): Tag
         + {static} euthanasia(): Tag
         + toString(): String
@@ -136,7 +136,7 @@ package code_metier_lapin_robot {
     }
 
     class CSVScanner {
-        - {static} DELIMITER: string
+        - {static} DELIMITER: String
         - headingComment: String
         - start: Date
         - points: Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
