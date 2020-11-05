@@ -135,9 +135,9 @@ public final class RabitDataLoader {
 	}
 	
    	public final Optional<DataPoint> getPoint(DataType type, Mesure mesure, Float timestamp) {
-   		ArrayList<DataPoint> points = this.points.get(type).get(mesure);
+   		ArrayList<DataPoint> filtered = this.points.get(type).get(mesure);
    		
-   		for (DataPoint point: points) {
+   		for (DataPoint point: filtered) {
 			if (point.getTimestamp() == timestamp) {
 				return Optional.of(point);
 			}
@@ -147,17 +147,34 @@ public final class RabitDataLoader {
    	}
    	
    	public final HashMap<Mesure, Optional<DataPoint>> getPoint(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
-   		HashMap<Mesure, Optional<DataPoint>> points = new HashMap<Mesure, Optional<DataPoint>>();
+   		HashMap<Mesure, Optional<DataPoint>> result = new HashMap<Mesure, Optional<DataPoint>>();
    		
    		for (Mesure mesure: mesures) {
-   			points.put(mesure, this.getPoint(type, mesure, timestamp));
+   			result.put(mesure, this.getPoint(type, mesure, timestamp));
    		}
    		
-   		return points;
+   		return result;
    	}
    	
    	public final ArrayList<DataPoint> getPoints(DataType type, Mesure mesure, Optional<Tag> tag) {
-   		return new ArrayList<DataPoint>();
+   		ArrayList<DataPoint> filtered = this.points.get(type).get(mesure);
+   		
+   		if (tag.isEmpty()) {
+   			return filtered;
+   		}
+   		
+   		ExperimentPhase phase = this.phasesMap.get(tag.get());
+   		
+   		ArrayList<DataPoint> result = new ArrayList<DataPoint>();
+   		
+   		for (DataPoint point: filtered) {
+   			Float timestamp = point.getTimestamp();
+   			if (timestamp >= phase.start && timestamp <= phase.end) {
+   				result.add(point);
+   			}
+   		}
+   		
+   		return result;
    	}
    	
 	public final HashMap<Mesure, ArrayList<DataPoint>> getPoints(DataType type, ArrayList<Mesure> mesures, Optional<Tag> tag) {
