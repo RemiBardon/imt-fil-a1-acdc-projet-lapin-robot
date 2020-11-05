@@ -233,7 +233,23 @@ public final class RabitDataLoader {
 	}
 	
 	public final Range<Float> getValueRange(ArrayList<DataPoint> points) {
-		return new Range<Float>(0.0f, 2.0f);
+		if (points.isEmpty()) {
+			return new Range<Float>(0.0f, 1.0f);
+		}
+		
+		Float minimum = Float.POSITIVE_INFINITY;
+		Float maximum = Float.NEGATIVE_INFINITY;
+		
+		for (DataPoint point: points) {
+			Float value = point.getValue();
+			if (value < minimum) {
+				minimum = value;
+			} else if (value > maximum) {
+				maximum = value;
+			}
+		}
+		
+		return new Range<Float>(minimum, maximum);
 	}
 	
 	public final <T> HashMap<T, Range<Float>> getValueRangeFromMap(HashMap<T, ArrayList<DataPoint>> points) {
