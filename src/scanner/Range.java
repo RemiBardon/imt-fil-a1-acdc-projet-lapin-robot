@@ -6,7 +6,7 @@ package scanner;
  *
  * @param <T> A data type
  */
-public final class Range<T> {
+public final class Range<T extends Comparable<T>> implements Comparable<Range<T>> {
 	
 	private T minimum;
 	
@@ -31,6 +31,11 @@ public final class Range<T> {
 	 */
 	public T getMaximum() {
 		return this.maximum;
+	}
+
+	@Override
+	public int compareTo(Range<T> o) {
+		return this.getMinimum().compareTo(o.getMinimum());
 	}
 	
 }

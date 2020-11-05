@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedSet;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -273,7 +275,11 @@ public final class RabitDataLoader {
 	}
 	
 	public final ArrayList<Range<Float>> getOmittedRanges() {
-		return new ArrayList<Range<Float>>();
+		ArrayList<Range<Float>> result = new ArrayList<Range<Float>>(this.omittedPoints.keySet());
+		
+		Collections.sort(result);
+		
+		return result;
 	}
 	
 	public final HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>> getOmittedPoints(Range<Float> range) {
