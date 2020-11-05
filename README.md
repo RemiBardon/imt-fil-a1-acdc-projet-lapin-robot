@@ -156,7 +156,7 @@ package code_metier_lapin_robot {
         - phases: ExperimentPhase[]
         - phasesMap: HashMap<Tag, ExperimentPhase>
         - points: HashMap<DataType, HashMap<Mesure, DataPoint[]>>
-        - {final} omittedPoints: HashMap<Range<Date>, HashMap<DataType, HashMap<Mesure, DataPoint[]>>>
+        - {final} omittedPoints: HashMap<Range<Float>, HashMap<DataType, HashMap<Mesure, DataPoint[]>>>
         + RabitDataLoader()
 
         - reset()
@@ -166,12 +166,12 @@ package code_metier_lapin_robot {
 
         + getTags(): Tag[]
 
-        + getPoints(type: DataType, mesure: Mesure, timestamp: Date): DataPoint
-        + getPoints(type: DataType, mesures: Mesure[], timestamp: Date): HashMap<Mesure, DataPoint>
+        + getPoint(type: DataType, mesure: Mesure, timestamp: Float): Optional<DataPoint>
+        + getPoints(type: DataType, mesures: Mesure[], timestamp: Float): HashMap<Mesure, DataPoint>
         + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): DataPoint[]
         + getPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): HashMap<Mesure, DataPoint[]>
-        + getAllPoints(mesure: Mesure, timestamp: Date): HashMap<DataType, DataPoint>
-        + getAllPoints(mesures: Mesure[], timestamp: Date): HashMap<DataType, HashMap<Mesure, DataPoint>>
+        + getAllPoints(mesure: Mesure, timestamp: Float): HashMap<DataType, DataPoint>
+        + getAllPoints(mesures: Mesure[], timestamp: Float): HashMap<DataType, HashMap<Mesure, DataPoint>>
         + getAllPoints(mesure: Mesure, tag: Optional<Tag>): HashMap<DataType, DataPoint[]>
         + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
 

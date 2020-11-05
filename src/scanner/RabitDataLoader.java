@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -135,11 +134,19 @@ public final class RabitDataLoader {
 		return tags;
 	}
 	
-   	public final DataPoint getPoints(DataType type, Mesure mesure, Date timestamp) {
-   		return new DataPoint(0.0f, 0.0f);
+   	public final Optional<DataPoint> getPoint(DataType type, Mesure mesure, Float timestamp) {
+   		ArrayList<DataPoint> points = this.points.get(type).get(mesure);
+   		
+   		for (DataPoint point: points) {
+			if (point.getTimestamp() == timestamp) {
+				return Optional.of(point);
+			}
+		}
+   		
+   		return Optional.empty();
    	}
    	
-   	public final HashMap<Mesure, DataPoint> getPoints(DataType type, ArrayList<Mesure> mesures, Date timestamp) {
+   	public final HashMap<Mesure, DataPoint> getPoints(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
    		return new HashMap<Mesure, DataPoint>();
    	}
    	
@@ -151,11 +158,11 @@ public final class RabitDataLoader {
    		return new HashMap<Mesure, ArrayList<DataPoint>>();
 	}
    	
-   	public final HashMap<DataType, DataPoint> getAllPoints(Mesure mesure, Date timestamp) {
+   	public final HashMap<DataType, DataPoint> getAllPoints(Mesure mesure, Float timestamp) {
    		return new HashMap<DataType, DataPoint>();
    	}
    	
-	public final HashMap<DataType, HashMap<Mesure, DataPoint>> getAllPoints(ArrayList<Mesure> mesures, Date timestamp) {
+	public final HashMap<DataType, HashMap<Mesure, DataPoint>> getAllPoints(ArrayList<Mesure> mesures, Float timestamp) {
    		return new HashMap<DataType, HashMap<Mesure, DataPoint>>();
 	}
    	
