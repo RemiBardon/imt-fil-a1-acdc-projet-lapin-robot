@@ -126,7 +126,13 @@ public final class RabitDataLoader {
 	}
 	
 	public final ArrayList<Tag> getTags() {
-		return new ArrayList<Tag>();
+		ArrayList<Tag> tags = new ArrayList<Tag>();
+		
+		for (ExperimentPhase phase: this.phases) {
+			tags.add(phase.tag);
+		}
+		
+		return tags;
 	}
 	
    	public final DataPoint getPoints(DataType type, Mesure mesure, Date timestamp) {
