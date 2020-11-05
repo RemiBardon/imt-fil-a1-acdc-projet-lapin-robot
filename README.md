@@ -85,6 +85,9 @@ Seuls les besoins ont été décidés en commun, l'[API](https://en.wikipedia.or
 
 ### Diagramme de classes
 
+> Remarque: Ceci n'est pas ni diagramme de classes Java ni un réel diagramme de classes suivant toutes les normes UML. Je l'ai simplifié pour faciliter la lecture.  
+> Par exemple `Float[]` est en fait implémenté avec un `ArrayList<Float>`
+
 @startuml
 'Désactiver l'affichage en couleur des icônes de visibilité'
 skinparam classAttributeIconSize 0
@@ -99,9 +102,12 @@ package java.lang {
 }
 
 package java.util {
-    class Date
     class Optional<T>
-    class Dictionary<K, V>
+    class HashMap<K, V>
+}
+
+package com.opencsv {
+    class CSVReader
 }
 
 package code_metier_lapin_robot {
@@ -130,53 +136,65 @@ package code_metier_lapin_robot {
     }
 
     class DataPoint {
-        + timestamp: Date
-        + value: float
-        ~ DataPoint(timestamp: Date, value: float)
+        - timestamp: Float
+        - value: Float
+        ~ DataPoint(timestamp: Float, value: Float)
+        + getTimestamp(): Float
+        + getValue(): Float
     }
 
-    class CSVScanner {
+    class ExperimentPhase {
+        ~ tag: Tag
+        ~ start: Float
+        ~ end: Float
+        ~ ExperimentPhase(tag: Tag, start: Float, end: Float)
+    }
+
+    class RabitDataLoader {
         - {static} DELIMITER: String
         - headingComment: String
-        - start: Date
-        - points: Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
-        - omittedPoints: Dictionary<Range<Date>, Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>>
-        + CSVScanner()
+        - phases: ExperimentPhase[]
+        - phasesMap: HashMap<Tag, ExperimentPhase>
+        - points: HashMap<DataType, HashMap<Mesure, DataPoint[]>>
+        - {final} omittedPoints: HashMap<Range<Date>, HashMap<DataType, HashMap<Mesure, DataPoint[]>>>
+        + RabitDataLoader()
 
+        - reset()
+        - {static} emptyPoints(): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
+        - {static} emptyMesures(): HashMap<Mesure, DataPoint[]>
         + load(file: File)
 
         + getTags(): Tag[]
 
-        + getStart(): Date
-        + getEnd(): Date
-
         + getPoints(type: DataType, mesure: Mesure, timestamp: Date): DataPoint
-        + getPoints(type: DataType, mesures: Mesure[], timestamp: Date): Dictionary<Mesure, DataPoint>
+        + getPoints(type: DataType, mesures: Mesure[], timestamp: Date): HashMap<Mesure, DataPoint>
         + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): DataPoint[]
-        + getPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): Dictionary<Mesure, DataPoint[]>
-        + getAllPoints(mesure: Mesure, timestamp: Date): Dictionary<DataType, DataPoint>
-        + getAllPoints(mesures: Mesure[], timestamp: Date): Dictionary<DataType, Dictionary<Mesure, DataPoint>>
-        + getAllPoints(mesure: Mesure, tag: Optional<Tag>): Dictionary<DataType, DataPoint[]>
-        + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
+        + getPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): HashMap<Mesure, DataPoint[]>
+        + getAllPoints(mesure: Mesure, timestamp: Date): HashMap<DataType, DataPoint>
+        + getAllPoints(mesures: Mesure[], timestamp: Date): HashMap<DataType, HashMap<Mesure, DataPoint>>
+        + getAllPoints(mesure: Mesure, tag: Optional<Tag>): HashMap<DataType, DataPoint[]>
+        + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
 
         + getValueRange(points: DataPoint[]): Range<Float>
-        + getValueRange<T>(points: Dictionary<T, DataPoint[]>): Dictionary<T, Range<Float>>
-        + getValueRange<S, T>(points: Dictionary<S, Dictionary<T, DataPoint[]>>): Dictionary<S, Dictionary<T, Range<Float>>>
+        + getValueRange<T>(points: HashMap<T, DataPoint[]>): HashMap<T, Range<Float>>
+        + getValueRange<S, T>(points: HashMap<S, HashMap<T, DataPoint[]>>): HashMap<S, HashMap<T, Range<Float>>>
 
-        + getOmittedRanges(): Range<Date>[]
-        + getOmittedPoints(range: Range<Date>): Dictionary<DataType, Dictionary<Mesure, DataPoint[]>>
+        + getOmittedRanges(): Range<Float>[]
+        + getOmittedPoints(range: Range<Float>): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
 
         + getHeadingComment(): String
     }
 
-    CSVScanner <-down[dotted]- DataType
-    CSVScanner <-down[dotted]- Mesure
-    CSVScanner <-down[dotted]- Tag
-    CSVScanner <-down[dotted]- DataPoint
+    RabitDataLoader <-down[dotted]- DataType
+    RabitDataLoader <-down[dotted]- Mesure
+    RabitDataLoader <-down[dotted]- Tag
+    RabitDataLoader <-down[dotted]- DataPoint
+    RabitDataLoader <-down[dotted]- ExperimentPhase
 
 }
 
 code_metier_lapin_robot <-down[dotted]- java.lang
 code_metier_lapin_robot <-down[dotted]- java.util
 code_metier_lapin_robot <-down[dotted]- java.io
+code_metier_lapin_robot <-down[dotted]- com.opencsv
 @enduml
