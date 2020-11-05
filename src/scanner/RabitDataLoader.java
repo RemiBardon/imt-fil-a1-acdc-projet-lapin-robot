@@ -221,7 +221,15 @@ public final class RabitDataLoader {
 	}
    	
 	public final HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>> getAllPoints(ArrayList<Mesure> mesures, Optional<Tag> tag) {
-   		return new HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>>();
+		HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>> result = emptyPoints();
+		
+		for (Mesure mesure: mesures) {
+			for (Map.Entry<DataType,ArrayList<DataPoint>> entry: this.getPoints(mesure, tag).entrySet()) {
+				result.get(entry.getKey()).put(mesure, entry.getValue());
+			}
+		}
+		
+		return result;
 	}
 	
 	public final Range<Float> getValueRange(ArrayList<DataPoint> points) {
