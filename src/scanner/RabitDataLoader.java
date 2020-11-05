@@ -263,7 +263,13 @@ public final class RabitDataLoader {
 	}
 	
 	public final <S, T> HashMap<S, HashMap<T, Range<Float>>> getValueRangeFromNestedMap(HashMap<S, HashMap<T, ArrayList<DataPoint>>> points) {
-		return new HashMap<S, HashMap<T, Range<Float>>>();
+		HashMap<S, HashMap<T, Range<Float>>> result = new HashMap<S, HashMap<T, Range<Float>>>();
+		
+		for (Map.Entry<S, HashMap<T, ArrayList<DataPoint>>> entry: points.entrySet()) {
+			result.put(entry.getKey(), this.getValueRangeFromMap(entry.getValue()));
+		}
+		
+		return result;
 	}
 	
 	public final ArrayList<Range<Float>> getOmittedRanges() {
