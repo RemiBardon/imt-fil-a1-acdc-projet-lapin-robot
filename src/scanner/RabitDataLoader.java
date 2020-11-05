@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import com.opencsv.CSVParser;
@@ -187,8 +188,14 @@ public final class RabitDataLoader {
 		return result;
 	}
    	
-   	public final HashMap<DataType, DataPoint> getAllPoints(Mesure mesure, Float timestamp) {
-   		return new HashMap<DataType, DataPoint>();
+   	public final HashMap<DataType, ArrayList<DataPoint>> getAllPoints(Mesure mesure, Float timestamp) {
+   		HashMap<DataType, ArrayList<DataPoint>> result = new HashMap<DataType, ArrayList<DataPoint>>();
+   		
+   		for (Map.Entry<DataType,HashMap<Mesure,ArrayList<DataPoint>>> entry: this.points.entrySet()) {
+   			result.put(entry.getKey(), entry.getValue().get(mesure));
+   		}
+   		
+   		return result;
    	}
    	
 	public final HashMap<DataType, HashMap<Mesure, DataPoint>> getAllPoints(ArrayList<Mesure> mesures, Float timestamp) {
