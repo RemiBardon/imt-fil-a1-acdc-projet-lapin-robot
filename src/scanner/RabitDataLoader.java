@@ -147,7 +147,7 @@ public final class RabitDataLoader {
    		return Optional.empty();
    	}
    	
-   	public final HashMap<Mesure, Optional<DataPoint>> getPoint(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
+   	public final HashMap<Mesure, Optional<DataPoint>> getAllPoints(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
    		HashMap<Mesure, Optional<DataPoint>> result = new HashMap<Mesure, Optional<DataPoint>>();
    		
    		for (Mesure mesure: mesures) {
@@ -178,7 +178,7 @@ public final class RabitDataLoader {
    		return result;
    	}
    	
-	public final HashMap<Mesure, ArrayList<DataPoint>> getPoints(DataType type, ArrayList<Mesure> mesures, Optional<Tag> tag) {
+	public final HashMap<Mesure, ArrayList<DataPoint>> getAllPoints(DataType type, ArrayList<Mesure> mesures, Optional<Tag> tag) {
 		HashMap<Mesure, ArrayList<DataPoint>> result = new HashMap<Mesure, ArrayList<DataPoint>>();
 		
 		for (Mesure mesure: mesures) {
@@ -188,21 +188,28 @@ public final class RabitDataLoader {
 		return result;
 	}
    	
-   	public final HashMap<DataType, ArrayList<DataPoint>> getAllPoints(Mesure mesure, Float timestamp) {
-   		HashMap<DataType, ArrayList<DataPoint>> result = new HashMap<DataType, ArrayList<DataPoint>>();
+   	public final HashMap<DataType, Optional<DataPoint>> getPoints(Mesure mesure, Float timestamp) {
+   		HashMap<DataType, Optional<DataPoint>> result = new HashMap<DataType, Optional<DataPoint>>();
    		
-   		for (Map.Entry<DataType,HashMap<Mesure,ArrayList<DataPoint>>> entry: this.points.entrySet()) {
-   			result.put(entry.getKey(), entry.getValue().get(mesure));
+   		for (Map.Entry<DataType, HashMap<Mesure, ArrayList<DataPoint>>> entry: this.points.entrySet()) {
+   			DataType type = entry.getKey();
+   			result.put(type, this.getPoint(type, mesure, timestamp));
    		}
    		
    		return result;
    	}
    	
-	public final HashMap<DataType, HashMap<Mesure, DataPoint>> getAllPoints(ArrayList<Mesure> mesures, Float timestamp) {
-   		return new HashMap<DataType, HashMap<Mesure, DataPoint>>();
+	public final HashMap<Mesure, HashMap<DataType, Optional<DataPoint>>> getAllPoints(ArrayList<Mesure> mesures, Float timestamp) {
+		HashMap<Mesure, HashMap<DataType, Optional<DataPoint>>> result = new HashMap<Mesure, HashMap<DataType, Optional<DataPoint>>>();
+		
+		for (Mesure mesure: mesures) {
+			result.put(mesure, this.getPoints(mesure, timestamp));
+		}
+		
+		return result;
 	}
    	
-	public final HashMap<DataType, ArrayList<DataPoint>> getAllPoints(Mesure mesure, Optional<Tag> tag) {
+	public final HashMap<DataType, ArrayList<DataPoint>> getPoints(Mesure mesure, Optional<Tag> tag) {
    		return new HashMap<DataType, ArrayList<DataPoint>>();
 	}
    	

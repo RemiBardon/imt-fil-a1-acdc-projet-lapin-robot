@@ -96,11 +96,6 @@ package java.io {
     class File
 }
 
-package java.lang {
-    class String
-    class Range<T>
-}
-
 package java.util {
     class Optional<T>
     class HashMap<K, V>
@@ -149,6 +144,14 @@ package code_metier_lapin_robot {
         ~ end: Float
         ~ ExperimentPhase(tag: Tag, start: Float, end: Float)
     }
+    
+    class Range<T> {
+        - minimum: T
+        - maximum: T
+        + Range(minimum: T, maximum: T)
+        + getMinimum(): T
+        + getMaximum(): T
+    }
 
     class RabitDataLoader {
         - {static} DELIMITER: String
@@ -162,17 +165,18 @@ package code_metier_lapin_robot {
         - reset()
         - {static} emptyPoints(): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
         - {static} emptyMesures(): HashMap<Mesure, DataPoint[]>
+
         + load(file: File)
 
         + getTags(): Tag[]
 
         + getPoint(type: DataType, mesure: Mesure, timestamp: Float): Optional<DataPoint>
-        + getPoint(type: DataType, mesures: Mesure[], timestamp: Float): HashMap<Mesure, Optional<DataPoint>>
+        + getAllPoints(type: DataType, mesures: Mesure[], timestamp: Float): HashMap<Mesure, Optional<DataPoint>>
         + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): DataPoint[]
-        + getPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): HashMap<Mesure, DataPoint[]>
-        + getAllPoints(mesure: Mesure, timestamp: Float): HashMap<DataType, DataPoint>
-        + getAllPoints(mesures: Mesure[], timestamp: Float): HashMap<DataType, HashMap<Mesure, DataPoint>>
-        + getAllPoints(mesure: Mesure, tag: Optional<Tag>): HashMap<DataType, DataPoint[]>
+        + getAllPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): HashMap<Mesure, DataPoint[]>
+        + getPoints(mesure: Mesure, timestamp: Float): HashMap<DataType, Optional<DataPoint>>
+        + getAllPoints(mesures: Mesure[], timestamp: Float): HashMap<DataType, HashMap<Mesure, Optional<DataPoint>>>
+        + getPoints(mesure: Mesure, tag: Optional<Tag>): HashMap<DataType, DataPoint[]>
         + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): HashMap<DataType, HashMap<Mesure, DataPoint[]>>
 
         + getValueRange(points: DataPoint[]): Range<Float>
@@ -190,10 +194,10 @@ package code_metier_lapin_robot {
     RabitDataLoader <-down[dotted]- Tag
     RabitDataLoader <-down[dotted]- DataPoint
     RabitDataLoader <-down[dotted]- ExperimentPhase
+    RabitDataLoader <-down[dotted]- Range
 
 }
 
-code_metier_lapin_robot <-down[dotted]- java.lang
 code_metier_lapin_robot <-down[dotted]- java.util
 code_metier_lapin_robot <-down[dotted]- java.io
 code_metier_lapin_robot <-down[dotted]- com.opencsv
