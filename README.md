@@ -167,7 +167,7 @@ package code_metier_lapin_robot {
         + getTags(): Tag[]
 
         + getPoint(type: DataType, mesure: Mesure, timestamp: Float): Optional<DataPoint>
-        + getPoints(type: DataType, mesures: Mesure[], timestamp: Float): HashMap<Mesure, DataPoint>
+        + getPoint(type: DataType, mesures: Mesure[], timestamp: Float): HashMap<Mesure, Optional<DataPoint>>
         + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): DataPoint[]
         + getPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): HashMap<Mesure, DataPoint[]>
         + getAllPoints(mesure: Mesure, timestamp: Float): HashMap<DataType, DataPoint>

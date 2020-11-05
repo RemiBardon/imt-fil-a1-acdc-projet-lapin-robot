@@ -146,8 +146,14 @@ public final class RabitDataLoader {
    		return Optional.empty();
    	}
    	
-   	public final HashMap<Mesure, DataPoint> getPoints(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
-   		return new HashMap<Mesure, DataPoint>();
+   	public final HashMap<Mesure, Optional<DataPoint>> getPoint(DataType type, ArrayList<Mesure> mesures, Float timestamp) {
+   		HashMap<Mesure, Optional<DataPoint>> points = new HashMap<Mesure, Optional<DataPoint>>();
+   		
+   		for (Mesure mesure: mesures) {
+   			points.put(mesure, this.getPoint(type, mesure, timestamp));
+   		}
+   		
+   		return points;
    	}
    	
    	public final ArrayList<DataPoint> getPoints(DataType type, Mesure mesure, Optional<Tag> tag) {
