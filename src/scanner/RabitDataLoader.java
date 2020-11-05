@@ -283,7 +283,7 @@ public final class RabitDataLoader {
 	}
 	
 	public final HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>> getOmittedPoints(Range<Float> range) {
-		return new HashMap<DataType, HashMap<Mesure, ArrayList<DataPoint>>>();
+		return this.omittedPoints.get(range);
 	}
 	
 	public final String getHeadingComment() {
