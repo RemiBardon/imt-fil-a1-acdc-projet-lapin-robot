@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 /**
  * 
@@ -33,7 +33,6 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 		return this.maximum;
 	}
 
-	@Override
 	public int compareTo(Range<T> o) {
 		return this.getMinimum().compareTo(o.getMinimum());
 	}

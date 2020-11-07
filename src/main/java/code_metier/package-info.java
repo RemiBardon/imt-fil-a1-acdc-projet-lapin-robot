@@ -1,5 +1,5 @@
 /**
+ * 
  * @author Rémi BARDON
- *
  */
-package scanner;
+package code_metier;

@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 /**
  * Le type de donnée mesure

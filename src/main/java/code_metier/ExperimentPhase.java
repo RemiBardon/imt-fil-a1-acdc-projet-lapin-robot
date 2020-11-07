@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 /**
  * A phase of the experiment

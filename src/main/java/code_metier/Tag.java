@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 /**
  * A tag present in the data file, representing a period during the experiment

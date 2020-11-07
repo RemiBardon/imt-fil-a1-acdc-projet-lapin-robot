@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.SortedSet;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;

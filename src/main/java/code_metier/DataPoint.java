@@ -1,4 +1,4 @@
-package scanner;
+package code_metier;
 
 /**
  * A data point (recorded value associated and timestamp)
