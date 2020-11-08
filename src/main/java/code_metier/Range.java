@@ -7,16 +7,16 @@ package code_metier;
  * @param <T> A data type
  */
 public final class Range<T extends Comparable<T>> implements Comparable<Range<T>> {
-	
+
 	private T minimum;
-	
+
 	private T maximum;
-	
+
 	public Range(T minimum, T maximum) {
 		this.minimum = minimum;
 		this.maximum = maximum;
 	}
-	
+
 	/**
 	 * Gets the minimum value in this `Range`
 	 * @return The minimum value in this `Range`, not null
@@ -24,7 +24,7 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 	public T getMinimum() {
 		return this.minimum;
 	}
-	
+
 	/**
 	 * Gets the maximum value in this `Range`
 	 * @return The maximum value in this `Range`, not null
@@ -36,5 +36,5 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 	public int compareTo(Range<T> o) {
 		return this.getMinimum().compareTo(o.getMinimum());
 	}
-	
+
 }
