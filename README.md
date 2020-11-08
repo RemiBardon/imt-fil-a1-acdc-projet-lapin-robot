@@ -105,7 +105,7 @@ package com.opencsv {
     class CSVReader
 }
 
-package code_metier_lapin_robot {
+package code_metier {
 
     enum Mesure {
         PRESSION_ARTERIELLE
@@ -198,9 +198,9 @@ package code_metier_lapin_robot {
 
 }
 
-code_metier_lapin_robot <-down[dotted]- java.util
-code_metier_lapin_robot <-down[dotted]- java.io
-code_metier_lapin_robot <-down[dotted]- com.opencsv
+code_metier <-down[dotted]- java.util
+code_metier <-down[dotted]- java.io
+code_metier <-down[dotted]- com.opencsv
 @enduml
 
 ### Structure du projet Java
