@@ -1,0 +1,5 @@
+Temps	Pression Arterielle	Spirometrie	PA moyenne	Frequence Cardiaque	Frequence Respiratoire	Tag
+0	36	48	32	0	32	
+1	36	48	32	0	32	
+2	36	48	32	0	32	
+3	36	48	32	0	32	

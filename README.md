@@ -83,25 +83,41 @@ Seuls les besoins ont été décidés en commun, l'[API](https://en.wikipedia.or
     - 2 mesures sélectionnées
     - 1 tag sélectionné
 
+### Architectural Decision Records (ADR)
+
+- Le `timestamp` stocké dans `DataPoint` est un `float` et non un `Float` pour réduire la taille des objets en mémoire.
+- La valeur d'un `DataPoint` est un `Float` et non un `float` pour permettre l'utilisation des valeurs `NaN`.
+- `DataPoint` ne contient pas de référence à `Tag` pour réduire la taille des objets en mémoire.
+
 ### Diagramme de classes
 
-> Remarque: Ceci n'est pas ni diagramme de classes Java ni un réel diagramme de classes suivant toutes les normes UML. Je l'ai simplifié pour faciliter la lecture.  
-> Par exemple `Float[]` est en fait implémenté avec un `ArrayList<Float>` et `Map` est en fait `HashMap`.
+> Remarque: Ceci n'est pas ni diagramme de classes `Java` ni un réel diagramme de classes suivant toutes les normes `UML`. Je l'ai un peu simplifié pour faciliter la lecture.  
+> Par exemple, certaines méthodes comme `toString()` ou `hashCode()` ne sont pas présentes.
 
 @startuml
 'Désactiver l'affichage en couleur des icônes de visibilité'
 skinparam classAttributeIconSize 0
 
-package java.io {
-    class File
-}
+package java {
+    package io {
+        class File
+    }
+    package util {
+        class List<E>
+        class Map<K, V>
+        class Optional<T>
 
-package java.util {
-    class Optional<T>
-    class HashMap<K, V>
+        package regex {
+            class Pattern
+        }
+    }
+    package text {
+        class NumberFormat
+    }
 }
 
 package com.opencsv {
+    class CSVParser
     class CSVReader
 }
 
@@ -124,25 +140,30 @@ package code_metier {
 
     class Tag {
         - value: String
+        + {static} PREPARATION: Tag
         ~ Tag(value: String)
-        + {static} preparation(): Tag
-        + {static} euthanasia(): Tag
         + toString(): String
     }
 
     class DataPoint {
-        - timestamp: Float
-        - value: Float
-        ~ DataPoint(timestamp: Float, value: Float)
-        + getTimestamp(): Float
-        + getValue(): Float
+        - timestamp: float
+        - value: float
+        ~ DataPoint(timestamp: float, value: float)
+        + getTimestamp(): float
+        + getValue(): float
     }
 
     class ExperimentPhase {
         ~ tag: Tag
-        ~ start: Float
-        ~ end: Float
-        ~ ExperimentPhase(tag: Tag, start: Float, end: Float)
+        ~ start: float
+        ~ end: float
+        ~ ExperimentPhase(tag: Tag, start: float, end: float)
+        + getTag(): Tag
+        + setTag(tag: Tag)
+        + getStart(): float
+        + setStart(start: float)
+        + getEnd(): float
+        + setEnd(end: float)
     }
     
     class Range<T> {
@@ -154,37 +175,50 @@ package code_metier {
     }
 
     class RabitDataLoader {
-        - {static} DELIMITER: String
+        - {static} DELIMITER: char
+        - {static} PERIOD: int
+        - {static} TAG_PREFIX: Pattern
+        - {static} FORMAT: NumberFormat
+
         - headingComment: String
-        - phases: ExperimentPhase[]
-        - phasesMap: Map<Tag, ExperimentPhase>
-        - points: Map<DataType, Map<Mesure, DataPoint[]>>
-        - omittedPoints: Map<Range<Float>, Map<DataType, Map<Mesure, DataPoint[]>>>
+        - phases: Map<Mesure, List<ExperimentPhase>>
+        - phasesByTag: Map<Mesure, Map<Tag, ExperimentPhase>>
+        - phasesByStart: Map<Mesure, Map<Float, ExperimentPhase>>
+        - phasesByEnd: Map<Mesure, Map<Float, ExperimentPhase>>
+        - points: Map<DataType, Map<Mesure, List<DataPoint>>>
+        - omittedPoints: Map<Mesure, Map<Range<Float>, List<DataPoint>>>
+
         + RabitDataLoader()
 
         + reset()
-        - {static} emptyPoints(): Map<DataType, Map<Mesure, DataPoint[]>>
-        - {static} emptyMesures(): Map<Mesure, DataPoint[]>
+        - {static} addMissingDataTypes(map: Map<DataType, T>, supplier: Supplier<T>)
+        - {static} addMissingMeasures(map: Map<DataType, T>, supplier: Supplier<T>)
 
         + load(file: File) throws
+        + cleanData()
+        + decomposeData()
 
-        + getTags(): Tag[]
+        - {static} dataPointsValues(points: List<DataPoint>): double[]
+
+        + getTags(Mesure mesure): List<Tag>
+        + getPhases(final Mesure mesure): List<ExperimentPhase>
 
         + getPoint(type: DataType, mesure: Mesure, timestamp: Float): Optional<DataPoint>
-        + getAllPoints(type: DataType, mesures: Mesure[], timestamp: Float): Map<Mesure, Optional<DataPoint>>
-        + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): DataPoint[]
-        + getAllPoints(type: DataType, mesures: Mesure[], tag: Optional<Tag>): Map<Mesure, DataPoint[]>
+        + getAllPoints(type: DataType, mesures: List<Mesure>, timestamp: Float): Map<Mesure, Optional<DataPoint>>
+        + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): List<DataPoint>
+        + getAllPoints(type: DataType, mesures: List<Mesure>, tag: Optional<Tag>): Map<Mesure, List<DataPoint>>
         + getPoints(mesure: Mesure, timestamp: Float): Map<DataType, Optional<DataPoint>>
-        + getAllPoints(mesures: Mesure[], timestamp: Float): Map<DataType, Map<Mesure, Optional<DataPoint>>>
-        + getPoints(mesure: Mesure, tag: Optional<Tag>): Map<DataType, DataPoint[]>
-        + getAllPoints(mesures: Mesure[], tag: Optional<Tag>): Map<DataType, Map<Mesure, DataPoint[]>>
+        + getAllPoints(mesures: List<Mesure>, timestamp: Float): Map<DataType, Map<Mesure, Optional<DataPoint>>>
+        + getPoints(mesure: Mesure, tag: Optional<Tag>): Map<DataType, List<DataPoint>>
+        + getAllPoints(mesures: List<Mesure>, tag: Optional<Tag>): Map<DataType, Map<Mesure, List<DataPoint>>>
 
-        + getValueRange(points: DataPoint[]): Range<Float>
-        + getValueRange<T>(points: Map<T, DataPoint[]>): Map<T, Range<Float>>
-        + getValueRange<S, T>(points: Map<S, Map<T, DataPoint[]>>): Map<S, Map<T, Range<Float>>>
+        + getValueRange(points: List<DataPoint>): Range<Float>
+        + getValueRangeFromMap<T>(points: Map<T, List<DataPoint>>): Map<T, Range<Float>>
+        + getValueRangeFromNestedMap<S, T>(points: Map<S, Map<T, List<DataPoint>>>): Map<S, Map<T, Range<Float>>>
 
-        + getOmittedRanges(): Range<Float>[]
-        + getOmittedPoints(range: Range<Float>): Map<DataType, Map<Mesure, DataPoint[]>>
+        + getOmittedRanges(mesure: Mesure): List<Range<Float>>
+        + getAllOmittedRanges(): List<Range<Float>>
+        + getOmittedPoints(mesure: Mesure, range: Range<Float>): List<DataPoint>
 
         + getHeadingComment(): String
     }
@@ -198,8 +232,7 @@ package code_metier {
 
 }
 
-code_metier <-down[dotted]- java.util
-code_metier <-down[dotted]- java.io
+code_metier <-down[dotted]- java
 code_metier <-down[dotted]- com.opencsv
 @enduml
 
@@ -218,16 +251,18 @@ Le nommage des packages a été fait en suivant les [conventions de nommage](htt
 ## Utilisation
 
 ```java
-File file = new File(/* ... */);
-RabitDataLoader loader = new RabitDataLoader();
+final File file = new File(/* ... */);
+final RabitDataLoader loader = new RabitDataLoader();
 
 try {
     loader.load(file)
-} catch(IOException e) {
+    loader.cleanData()
+    loader.decomposeData()
+} catch(final IOException e) {
     e.printStackTrace();
-} catch(CsvValidationException e) {
+} catch(final CsvValidationException e) {
     e.printStackTrace();
-} catch(NumberFormatException e) {
+} catch(final NumberFormatException e) {
     e.printStackTrace();
 }
 ```

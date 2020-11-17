@@ -7,22 +7,22 @@ package code_metier;
 public enum DataType {
 
 	/**
-	 * RAW = TREND + SEASONNALITY + NOISE
+	 * {@code RAW = TREND + SEASONNALITY + NOISE}
 	 */
 	RAW,
 
 	/**
-	 * TREND = Moving Average of RAW
+	 * {@code TREND = Moving Average of RAW}
 	 */
 	TREND,
 
 	/**
-	 * SEASONNALITY = Seasonal Pattern in RAW
+	 * {@code SEASONNALITY = Seasonal Pattern in RAW}
 	 */
 	SEASONNALITY,
 
 	/**
-	 * NOISE = RAW - TREND - SEASONNALITY
+	 * {@code NOISE = RAW - TREND - SEASONNALITY}
 	 */
 	NOISE
 

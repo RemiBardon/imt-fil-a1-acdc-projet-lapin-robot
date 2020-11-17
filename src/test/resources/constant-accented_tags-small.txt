@@ -1,0 +1,5 @@
+Temps	Pression Arterielle	Spirometrie	PA moyenne	Frequence Cardiaque	Frequence Respiratoire	Tag
+0	36	48	32	0	32	#* tag1
+1	36	48	32	0	32	#* adrénaline
+2	36	48	32	0	32	#* tag3
+3	36	48	32	0	32	

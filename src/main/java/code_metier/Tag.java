@@ -7,40 +7,48 @@ package code_metier;
 public final class Tag {
 
 	/**
-	 * The string value of the `Tag`
+	 * The string value of the {@link Tag}
 	 */
 	private String value;
 
 	/**
+	 * The preparation phase
+	 */
+	public static final Tag PREPARATION = new Tag("preparation");
+
+	/**
 	 * A simple constructor
-	 * @param value The string value of the `Tag`
+	 * @param value The string value of the {@link Tag}
 	 */
 	Tag(String value) {
 		this.value = value;
 	}
 
 	/**
-	 * The preparation phase
-	 * @return A pre-defined `Tag`
-	 */
-	public static Tag preparation() {
-		return new Tag("preparation");
-	}
-
-	/**
-	 * The euthanasia phase
-	 * @return A pre-defined `Tag`
-	 */
-	public static Tag euthanasia() {
-		return new Tag("euthanasia");
-	}
-
-	/**
-	 * A string representation of the `Tag`
-	 * @return The string value of the `Tag`
+	 * A string representation of the {@link Tag}
+	 * @return The string value of the {@link Tag}
 	 */
 	public String toString() {
 		return this.value;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj instanceof Tag) {
+			Tag otherTag = (Tag)obj;
+			return otherTag.toString().equals(this.toString());
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+	    return value.hashCode();
 	}
 
 }
