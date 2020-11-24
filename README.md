@@ -59,6 +59,10 @@ Seuls les besoins ont été décidés en commun, l'[API](https://en.wikipedia.or
 
 ## Décisions personnelles
 
+### Données inaccessibles
+
+- J'ai décidé de ne pas créer de `Tag` `"euthanasie"`, car il est impossible de savoir quand celle-ci a lieu. Nous n'avions pas pensé à ça.
+
 ### Possibilités & restrictions
 
 - 0 ou 1 tag sélectionné à la fois (séance entière ou seulement une partie)

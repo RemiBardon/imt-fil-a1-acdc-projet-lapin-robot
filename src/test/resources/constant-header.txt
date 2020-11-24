@@ -1,0 +1,10 @@
+# Comment 1
+# Comment 2
+# Test	tab
+#No leading space
+#  Two leading spaces
+
+Temps	Pression Arterielle	Spirometrie	PA moyenne	Frequence Cardiaque	Frequence Respiratoire	Tag
+
+Erreur 1	Erreur 2
+0	36	48	32	0	32	

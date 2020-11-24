@@ -2,6 +2,7 @@ package code_metier;
 
 /**
  * A data point (recorded value associated and timestamp)
+ * 
  * @author Rémi BARDON
  */
 public final class DataPoint {
@@ -18,16 +19,18 @@ public final class DataPoint {
 
 	/**
 	 * A simple constructor
+	 * 
 	 * @param timestamp The time of recording the data
-	 * @param value The recorded value
+	 * @param value     The recorded value
 	 */
-	public DataPoint(float timestamp, Float value) {
+	DataPoint(float timestamp, Float value) {
 		this.timestamp = timestamp;
 		this.value = value;
 	}
 
 	/**
 	 * The time of recording the data
+	 * 
 	 * @return The number of milliseconds from the start of the experiment
 	 */
 	public float getTimestamp() {
@@ -36,6 +39,7 @@ public final class DataPoint {
 
 	/**
 	 * Sets the time of recording the data
+	 * 
 	 * @param timestamp The new timestamp value
 	 */
 	public void setTimestamp(float timestamp) {
@@ -44,14 +48,30 @@ public final class DataPoint {
 
 	/**
 	 * The recorded value
+	 * 
 	 * @return The recorded floating-point value
 	 */
 	public Float getValue() {
 		return this.value;
 	}
 
+	@Override
 	public String toString() {
 		return this.getValue() + " at " + this.getTimestamp();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj instanceof DataPoint) {
+			DataPoint otherPoint = (DataPoint) obj;
+			return otherPoint.getTimestamp() == this.getTimestamp() && otherPoint.getValue().equals(this.getValue());
+		}
+
+		return false;
 	}
 
 }

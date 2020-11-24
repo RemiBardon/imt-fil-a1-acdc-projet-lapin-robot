@@ -2,6 +2,7 @@ package code_metier;
 
 /**
  * A tag present in the data file, representing a period during the experiment
+ * 
  * @author Rémi BARDON
  */
 public final class Tag {
@@ -18,6 +19,7 @@ public final class Tag {
 
 	/**
 	 * A simple constructor
+	 * 
 	 * @param value The string value of the {@link Tag}
 	 */
 	Tag(String value) {
@@ -26,8 +28,10 @@ public final class Tag {
 
 	/**
 	 * A string representation of the {@link Tag}
+	 * 
 	 * @return The string value of the {@link Tag}
 	 */
+	@Override
 	public String toString() {
 		return this.value;
 	}
@@ -39,7 +43,7 @@ public final class Tag {
 		}
 
 		if (obj instanceof Tag) {
-			Tag otherTag = (Tag)obj;
+			Tag otherTag = (Tag) obj;
 			return otherTag.toString().equals(this.toString());
 		}
 
@@ -48,7 +52,7 @@ public final class Tag {
 
 	@Override
 	public int hashCode() {
-	    return value.hashCode();
+		return value.hashCode();
 	}
 
 }

@@ -16,16 +16,29 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 		this.maximum = maximum;
 	}
 
+	public boolean contains(final T value) {
+		return this.getMinimum().compareTo(value) <= 0 && this.getMaximum().compareTo(value) >= 0;
+	}
+
 	public T getMinimum() {
 		return this.minimum;
+	}
+
+	public void setMinimum(final T minimum) {
+		this.minimum = minimum;
 	}
 
 	public T getMaximum() {
 		return this.maximum;
 	}
 
+	public void setMaximum(final T maximum) {
+		this.maximum = maximum;
+	}
+
+	@Override
 	public String toString() {
-		return "(" + this.getMinimum() + "," + this.getMaximum() + ")";
+		return "(" + this.getMinimum() + "..." + this.getMaximum() + ")";
 	}
 
 	@Override
@@ -35,9 +48,9 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 		}
 
 		if (obj instanceof Range) {
-			Range<?> otherRange = (Range<?>)obj;
+			Range<?> otherRange = (Range<?>) obj;
 			return otherRange.getMinimum().equals(this.getMinimum())
-				&& otherRange.getMaximum().equals(this.getMaximum());
+					&& otherRange.getMaximum().equals(this.getMaximum());
 		}
 
 		return false;
@@ -45,9 +58,10 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 
 	@Override
 	public int hashCode() {
-	    return minimum.hashCode() * maximum.hashCode();
+		return minimum.hashCode() * maximum.hashCode();
 	}
 
+	@Override
 	public int compareTo(Range<T> o) {
 		return this.getMinimum().compareTo(o.getMinimum());
 	}
