@@ -75,8 +75,8 @@ public class ExperimentDataDecomposerTest {
 			
 			this.cleaner = new ExperimentDataCleaner();
 			for (final var measure : this.loader.getMeasures()) {
-				final var points = this.loader.getDataPoints().get(measure);
-				this.cleaner.clean(points, this.loader.getPhases().get(measure));
+				final var points = this.loader.getDataPoints(measure);
+				this.cleaner.clean(points, this.loader.getPhases(measure));
 			}
 			
 			this.decomposer = new ExperimentDataDecomposer();
@@ -86,7 +86,7 @@ public class ExperimentDataDecomposerTest {
 		@DisplayName("Decompose Data")
 		public void testDecomposeData() throws Exception {
 			for (final var measure : this.loader.getMeasures()) {
-				final var points = this.loader.getDataPoints().get(measure);
+				final var points = this.loader.getDataPoints(measure);
 				this.decomposer.decompose(points, 2);
 
 				for (final var type : DataType.values()) {
@@ -145,8 +145,8 @@ public class ExperimentDataDecomposerTest {
 
 		final var measure = MEASURE_CONSTRUCTOR.newInstance("Mesure 2");
 
-		final var points = this.loader.getDataPoints().get(measure);
-		this.cleaner.clean(points, this.loader.getPhases().get(measure));
+		final var points = this.loader.getDataPoints(measure);
+		this.cleaner.clean(points, this.loader.getPhases(measure));
 		this.decomposer.decompose(points, 4);
 
 		for (final var type : DataType.values()) {

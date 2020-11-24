@@ -121,8 +121,9 @@ public class ExperimentDataCleanerTest {
 
 		for (final var entry : expected.entrySet()) {
 			final Measure measure = entry.getKey();
-			this.cleaner.clean(this.loader.getDataPoints().get(measure), this.loader.getPhases().get(measure));
-			assertEquals(entry.getValue(), this.loader.getDataPoints().get(measure), measure.toString());
+			final var points = this.loader.getDataPoints(measure);
+			this.cleaner.clean(points, this.loader.getPhases(measure));
+			assertEquals(entry.getValue(), points, measure.toString());
 		}
 	}
 
@@ -158,7 +159,7 @@ public class ExperimentDataCleanerTest {
 			))
 		);
 
-		this.cleaner.clean(this.loader.getDataPoints().get(measure), this.loader.getPhases().get(measure));
+		this.cleaner.clean(this.loader.getDataPoints(measure), this.loader.getPhases(measure));
 		
 		for (final var entry : expected.entrySet()) {
 			final Tag tag = entry.getKey();
@@ -173,8 +174,8 @@ public class ExperimentDataCleanerTest {
 		this.loader.load(new File("src/test/resources/test_data-with_nans.txt"));
 
 		for (final var measure : this.loader.getMeasures()) {
-			final var points = this.loader.getDataPoints().get(measure);
-			this.cleaner.clean(points, this.loader.getPhases().get(measure));
+			final var points = this.loader.getDataPoints(measure);
+			this.cleaner.clean(points, this.loader.getPhases(measure));
 			assertEquals(6, points.size(), measure.toString());
 		}
 	}
@@ -228,7 +229,7 @@ public class ExperimentDataCleanerTest {
 
 		for (final var entry : omittedRanges.entrySet()) {
 			final Measure measure = entry.getKey();
-			this.cleaner.clean(this.loader.getDataPoints().get(measure), this.loader.getPhases().get(measure));
+			this.cleaner.clean(this.loader.getDataPoints(measure), this.loader.getPhases(measure));
 			assertEquals(entry.getValue(), this.cleaner.getOmittedRanges(), measure.toString());
 		}
 	}
@@ -248,9 +249,9 @@ public class ExperimentDataCleanerTest {
 		};
 
 		final int expectedTotalLines = 820_914;
-		final var points = this.loader.getDataPoints().get(measure);
+		final var points = this.loader.getDataPoints(measure);
 
-		this.cleaner.clean(points, this.loader.getPhases().get(measure));
+		this.cleaner.clean(points, this.loader.getPhases(measure));
 
 		final int expectedTotalCleanLines = 817_443;
 		final int[] expectedCleanLines = { 515_381, 42_990, 48_052, 211_020 };

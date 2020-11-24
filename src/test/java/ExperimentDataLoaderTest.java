@@ -86,8 +86,8 @@ public class ExperimentDataLoaderTest {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/constant.txt"));
 
-		for (final var entry : loader.getDataPoints().entrySet()) {
-			assertEquals(30, entry.getValue().size(), entry.getKey().toString());
+		for (final var measure : loader.getMeasures()) {
+			assertEquals(30, loader.getDataPoints(measure).size(), measure.toString());
 		}
 	}
 
