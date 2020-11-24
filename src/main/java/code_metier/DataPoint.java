@@ -28,38 +28,6 @@ public final class DataPoint {
 		this.value = value;
 	}
 
-	/**
-	 * The time of recording the data
-	 * 
-	 * @return The number of milliseconds from the start of the experiment
-	 */
-	public float getTimestamp() {
-		return this.timestamp;
-	}
-
-	/**
-	 * Sets the time of recording the data
-	 * 
-	 * @param timestamp The new timestamp value
-	 */
-	public void setTimestamp(float timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	/**
-	 * The recorded value
-	 * 
-	 * @return The recorded floating-point value
-	 */
-	public Float getValue() {
-		return this.value;
-	}
-
-	@Override
-	public String toString() {
-		return this.getValue() + " at " + this.getTimestamp();
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -72,6 +40,38 @@ public final class DataPoint {
 		}
 
 		return false;
+	}
+
+	/**
+	 * The time of recording the data
+	 * 
+	 * @return The number of milliseconds from the start of the experiment
+	 */
+	public float getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
+	 * The recorded value
+	 * 
+	 * @return The recorded floating-point value
+	 */
+	public Float getValue() {
+		return this.value;
+	}
+
+	/**
+	 * Sets the time of recording the data
+	 * 
+	 * @param timestamp The new timestamp value
+	 */
+	public void setTimestamp(float timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	@Override
+	public String toString() {
+		return this.getValue() + " at " + this.getTimestamp();
 	}
 
 }

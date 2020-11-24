@@ -1,13 +1,13 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import code_metier.DataPoint;
@@ -15,6 +15,7 @@ import code_metier.ExperimentDataLoader;
 import code_metier.Measure;
 import code_metier.Tag;
 
+@DisplayName("Loader")
 public class ExperimentDataLoaderTest {
 
 	static Constructor<Measure> MEASURE_CONSTRUCTOR;
@@ -42,74 +43,96 @@ public class ExperimentDataLoaderTest {
 	}
 
 	@Test
-	public void testReadHeader() throws Exception {
-		final ExperimentDataLoader loader = new ExperimentDataLoader();
-		loader.load(new File("src/test/resources/constant-header.txt"));
-
-		assertEquals("Comment 1\nComment 2\nTest\ttab\nNo leading space\n Two leading spaces",
-				loader.getHeadingComment());
-	}
-
-	@Test
-	public void testReadMeasureNames() throws Exception {
-		final ExperimentDataLoader loader = new ExperimentDataLoader();
-		loader.load(new File("src/test/resources/constant-header.txt"));
-
-		final Measure[] measures = { MEASURE_CONSTRUCTOR.newInstance("Pression Arterielle"),
-				MEASURE_CONSTRUCTOR.newInstance("Spirometrie"), MEASURE_CONSTRUCTOR.newInstance("PA moyenne"),
-				MEASURE_CONSTRUCTOR.newInstance("Frequence Cardiaque"),
-				MEASURE_CONSTRUCTOR.newInstance("Frequence Respiratoire"), };
-		assertArrayEquals(measures, loader.getMeasures().toArray());
-	}
-
-	@Test
+	@DisplayName("Create Default Measure Names")
 	public void testDefaultMeasureNames() throws Exception {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/constant-no_tag-no_measures-small.txt"));
 
-		final Measure[] measures1 = { MEASURE_CONSTRUCTOR.newInstance("Mesure 1"),
-				MEASURE_CONSTRUCTOR.newInstance("Mesure 2"), MEASURE_CONSTRUCTOR.newInstance("Mesure 3"),
-				MEASURE_CONSTRUCTOR.newInstance("Mesure 4"), MEASURE_CONSTRUCTOR.newInstance("Mesure 5"), };
+		final Measure[] measures1 = {
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 1"),
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 2"),
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 3"),
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 4"),
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 5"),
+		};
 		assertArrayEquals(measures1, loader.getMeasures().toArray());
 
 		loader.load(new File("src/test/resources/constant-no_tag-no_measures-2_columns-small.txt"));
 
-		final Measure[] measures2 = { MEASURE_CONSTRUCTOR.newInstance("Mesure 1"),
-				MEASURE_CONSTRUCTOR.newInstance("Mesure 2"), };
+		final Measure[] measures2 = {
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 1"),
+			MEASURE_CONSTRUCTOR.newInstance("Mesure 2"),
+		};
 		assertArrayEquals(measures2, loader.getMeasures().toArray());
 	}
 
 	@Test
+	@DisplayName("Read Accented Tags")
+	public void testReadAccentedTags() throws Exception {
+		final ExperimentDataLoader loader = new ExperimentDataLoader();
+		loader.load(new File("src/test/resources/constant-accented_tags-small.txt"));
+
+		final Tag[] expected = {
+			TAG_CONSTRUCTOR.newInstance("tag1"),
+			TAG_CONSTRUCTOR.newInstance("adrénaline"),
+			TAG_CONSTRUCTOR.newInstance("tag3"),
+		};
+		assertArrayEquals(expected, loader.getTags().toArray(), "Tags: " + loader.getTags());
+	}
+
+	@Test
+	@DisplayName("Read Points")
 	public void testReadDataPoints() throws Exception {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/constant.txt"));
 
-		for (final Map.Entry<Measure, List<DataPoint>> entry : loader.getDataPoints().entrySet()) {
+		for (final var entry : loader.getDataPoints().entrySet()) {
 			assertEquals(30, entry.getValue().size(), entry.getKey().toString());
 		}
 	}
 
 	@Test
+	@DisplayName("Read File Header")
+	public void testReadHeader() throws Exception {
+		final ExperimentDataLoader loader = new ExperimentDataLoader();
+		loader.load(new File("src/test/resources/constant-header.txt"));
+
+		final var expected = "Comment 1\nComment 2\nTest\ttab\nNo leading space\n Two leading spaces";
+		assertEquals(expected, loader.getHeadingComment());
+	}
+
+	@Test
+	@DisplayName("Read Measure Names")
+	public void testReadMeasureNames() throws Exception {
+		final ExperimentDataLoader loader = new ExperimentDataLoader();
+		loader.load(new File("src/test/resources/constant-header.txt"));
+
+		final Measure[] measures = {
+			MEASURE_CONSTRUCTOR.newInstance("Pression Arterielle"),
+			MEASURE_CONSTRUCTOR.newInstance("Spirometrie"),
+			MEASURE_CONSTRUCTOR.newInstance("PA moyenne"),
+			MEASURE_CONSTRUCTOR.newInstance("Frequence Cardiaque"),
+			MEASURE_CONSTRUCTOR.newInstance("Frequence Respiratoire"),
+		};
+		assertArrayEquals(measures, loader.getMeasures().toArray());
+	}
+
+	@Test
+	@DisplayName("Read Tags")
 	public void testReadTags() throws Exception {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/constant.txt"));
 
-		final Tag[] expected = { TAG_CONSTRUCTOR.newInstance("preparation"), TAG_CONSTRUCTOR.newInstance("tag1"),
-				TAG_CONSTRUCTOR.newInstance("tag2") };
+		final Tag[] expected = {
+			TAG_CONSTRUCTOR.newInstance("preparation"),
+			TAG_CONSTRUCTOR.newInstance("tag1"),
+			TAG_CONSTRUCTOR.newInstance("tag2"),
+		};
 		assertArrayEquals(expected, loader.getTags().toArray(), "Tags: " + loader.getTags());
 	}
 
 	@Test
-	public void testReadAccentedTags() throws Exception {
-		final ExperimentDataLoader loader = new ExperimentDataLoader();
-		loader.load(new File("src/test/resources/constant-accented_tags-small.txt"));
-
-		final Tag[] expected = { TAG_CONSTRUCTOR.newInstance("tag1"), TAG_CONSTRUCTOR.newInstance("adrénaline"),
-				TAG_CONSTRUCTOR.newInstance("tag3") };
-		assertArrayEquals(expected, loader.getTags().toArray(), "Tags: " + loader.getTags());
-	}
-
-	@Test
+	@DisplayName("Get Points By Tag")
 	public void testStoreDataPointsByTag() throws Exception {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/constant.txt"));
@@ -117,14 +140,19 @@ public class ExperimentDataLoaderTest {
 		final Measure measure = MEASURE_CONSTRUCTOR.newInstance("Pression Arterielle");
 		final Optional<Tag> tag = Optional.of(TAG_CONSTRUCTOR.newInstance("tag1"));
 
-		final DataPoint[] expected = { DATA_POINT_CONSTRUCTOR.newInstance(10f, 36f),
-				DATA_POINT_CONSTRUCTOR.newInstance(11f, 36f), DATA_POINT_CONSTRUCTOR.newInstance(12f, 36f),
-				DATA_POINT_CONSTRUCTOR.newInstance(13f, 36f), DATA_POINT_CONSTRUCTOR.newInstance(14f, 36f), };
+		final DataPoint[] expected = {
+			DATA_POINT_CONSTRUCTOR.newInstance(10f, 36f),
+			DATA_POINT_CONSTRUCTOR.newInstance(11f, 36f),
+			DATA_POINT_CONSTRUCTOR.newInstance(12f, 36f),
+			DATA_POINT_CONSTRUCTOR.newInstance(13f, 36f),
+			DATA_POINT_CONSTRUCTOR.newInstance(14f, 36f),
+		};
 		assertArrayEquals(expected, loader.getDataPoints(measure, tag).toArray());
 	}
 
 	@Test
-	@org.junit.jupiter.api.Tag("slow")
+	@Slow
+	@DisplayName("Read Real Data")
 	public void testLoadRealData() throws Exception {
 		final ExperimentDataLoader loader = new ExperimentDataLoader();
 		loader.load(new File("src/test/resources/real_data-group_3.txt"));
@@ -133,9 +161,12 @@ public class ExperimentDataLoaderTest {
 
 		assertEquals(4, loader.getTags(measure).size(), "Tags: " + loader.getTags(measure));
 
-		final Tag[] tags = { TAG_CONSTRUCTOR.newInstance("preparation"), TAG_CONSTRUCTOR.newInstance("ach"),
-				TAG_CONSTRUCTOR.newInstance("adr�naline"), // For some reason, we can't decode "adrénaline" correctly
-				TAG_CONSTRUCTOR.newInstance("ocytocine") };
+		final Tag[] tags = {
+			TAG_CONSTRUCTOR.newInstance("preparation"),
+			TAG_CONSTRUCTOR.newInstance("ach"),
+			TAG_CONSTRUCTOR.newInstance("adr�naline"), // For some reason, we can't decode "adrénaline" correctly
+			TAG_CONSTRUCTOR.newInstance("ocytocine"),
+		};
 
 		assertArrayEquals(tags, loader.getTags(measure).toArray());
 
@@ -144,8 +175,8 @@ public class ExperimentDataLoaderTest {
 		assertEquals(expectedTotalLines, Arrays.stream(expectedLines).sum());
 		assertEquals(expectedTotalLines, loader.getDataPoints(measure, Optional.empty()).size());
 		for (int i = 0; i < tags.length; i++) {
-			assertEquals(expectedLines[i], loader.getDataPoints(measure, Optional.of(tags[i])).size(),
-					tags[i].toString());
+			final int actual = loader.getDataPoints(measure, Optional.of(tags[i])).size();
+			assertEquals(expectedLines[i], actual, tags[i].toString());
 		}
 	}
 

@@ -10,6 +10,10 @@ import java.util.Map;
 
 public class ExperimentDataCleaner {
 
+	private static boolean shouldRemovePoint(final DataPoint point) {
+		return point.getValue().isNaN();
+	}
+
 	private final Map<Range<Float>, List<DataPoint>> omittedPoints;
 
 	public ExperimentDataCleaner() {
@@ -114,8 +118,12 @@ public class ExperimentDataCleaner {
 		points.removeIf(ExperimentDataCleaner::shouldRemovePoint);
 	}
 
-	private static boolean shouldRemovePoint(final DataPoint point) {
-		return point.getValue().isNaN();
+	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
+		if (!this.omittedPoints.containsKey(range)) {
+			return new ArrayList<DataPoint>();
+		}
+
+		return this.omittedPoints.get(range);
 	}
 
 	public List<Range<Float>> getOmittedRanges() {
@@ -124,14 +132,6 @@ public class ExperimentDataCleaner {
 		Collections.sort(omittedRanges);
 
 		return omittedRanges;
-	}
-
-	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
-		if (!this.omittedPoints.containsKey(range)) {
-			return new ArrayList<DataPoint>();
-		}
-
-		return this.omittedPoints.get(range);
 	}
 
 }

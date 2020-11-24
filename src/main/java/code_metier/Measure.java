@@ -21,25 +21,6 @@ public final class Measure {
 		this.name = name;
 	}
 
-	/**
-	 * A getter for {@code Measure.name}
-	 * 
-	 * @return The name of the {@link Measure}
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * A string representation of the {@link Measure}
-	 * 
-	 * @return The string value of the {@link Measure}
-	 */
-	@Override
-	public String toString() {
-		return this.getName();
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -54,9 +35,28 @@ public final class Measure {
 		return false;
 	}
 
+	/**
+	 * A getter for {@code Measure.name}
+	 * 
+	 * @return The name of the {@link Measure}
+	 */
+	public String getName() {
+		return this.name;
+	}
+
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	/**
+	 * A string representation of the {@link Measure}
+	 * 
+	 * @return The string value of the {@link Measure}
+	 */
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 
 }

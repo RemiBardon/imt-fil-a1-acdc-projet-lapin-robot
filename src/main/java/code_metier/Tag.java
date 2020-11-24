@@ -8,14 +8,14 @@ package code_metier;
 public final class Tag {
 
 	/**
-	 * The string value of the {@link Tag}
-	 */
-	private String value;
-
-	/**
 	 * The preparation phase
 	 */
 	public static final Tag PREPARATION = new Tag("preparation");
+
+	/**
+	 * The string value of the {@link Tag}
+	 */
+	private String value;
 
 	/**
 	 * A simple constructor
@@ -24,16 +24,6 @@ public final class Tag {
 	 */
 	Tag(String value) {
 		this.value = value;
-	}
-
-	/**
-	 * A string representation of the {@link Tag}
-	 * 
-	 * @return The string value of the {@link Tag}
-	 */
-	@Override
-	public String toString() {
-		return this.value;
 	}
 
 	@Override
@@ -53,6 +43,16 @@ public final class Tag {
 	@Override
 	public int hashCode() {
 		return value.hashCode();
+	}
+
+	/**
+	 * A string representation of the {@link Tag}
+	 * 
+	 * @return The string value of the {@link Tag}
+	 */
+	@Override
+	public String toString() {
+		return this.value;
 	}
 
 }
