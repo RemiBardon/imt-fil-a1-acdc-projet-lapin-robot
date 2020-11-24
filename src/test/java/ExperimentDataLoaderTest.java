@@ -77,7 +77,7 @@ public class ExperimentDataLoaderTest {
 			TAG_CONSTRUCTOR.newInstance("adrénaline"),
 			TAG_CONSTRUCTOR.newInstance("tag3"),
 		};
-		assertArrayEquals(expected, loader.getTags().toArray(), "Tags: " + loader.getTags());
+		assertArrayEquals(expected, loader.getAllTags().toArray(), "Tags: " + loader.getAllTags());
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class ExperimentDataLoaderTest {
 			TAG_CONSTRUCTOR.newInstance("tag1"),
 			TAG_CONSTRUCTOR.newInstance("tag2"),
 		};
-		assertArrayEquals(expected, loader.getTags().toArray(), "Tags: " + loader.getTags());
+		assertArrayEquals(expected, loader.getAllTags().toArray(), "Tags: " + loader.getAllTags());
 	}
 
 	@Test
