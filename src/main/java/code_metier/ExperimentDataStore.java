@@ -1,5 +1,6 @@
 package code_metier;
 
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,8 +23,7 @@ class ExperimentDataStore {
 
 	/**
 	 * 
-	 * @param measure
-	 * @param optionalTag
+	 * @param optionalTag An {@link Optional} {@link Tag} to filter results
 	 * @return <ul>
 	 *     <li>An empty {@link List} if the given {@link Tag} doesn't exist</li>
 	 *     <li>Otherwise, the {@link DataPoint}s corresponding to given {@link Tag}</li>

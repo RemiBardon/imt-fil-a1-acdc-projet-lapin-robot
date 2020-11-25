@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -126,15 +127,15 @@ public final class ExperimentDataLoader {
 			if (!split[tagIndex].isEmpty()) {
 				if (validLinesRead == 0) {
 					// If first line has a tag, remove default preparation tag
-					for (final Measure measure : this.measures) {
-						this.getPhases(measure).clear();
-					}
+					this.stores.values().forEach((store) -> {
+						store.getPhases().clear();
+					});
 				}
 
 				actualTag = new Tag(TAG_PREFIX.matcher(split[6]).replaceFirst(""));
 
-				for (final Measure measure : this.measures) {
-					this.getPhases(measure).put(actualTag, new Range<Float>(timestamp, timestamp));
+				for (final var store: this.stores.values()) {
+					store.getPhases().put(actualTag, new Range<Float>(timestamp, timestamp));
 				}
 			}
 
@@ -144,12 +145,16 @@ public final class ExperimentDataLoader {
 				final DataPoint newPoint = new DataPoint(timestamp, value);
 				final Measure measure = this.measures.get(i);
 
-				this.getDataPoints(measure).add(newPoint);
+				try {
+					this.getDataPoints(measure).add(newPoint);
+				} catch (InvalidKeyException e) {
+					// Silently dismiss exception
+				}
 			}
 
 			// Update phase end
-			for (final Measure measure : this.measures) {
-				this.getPhases(measure).get(actualTag).setMaximum(timestamp);
+			for (final var store: this.stores.values()) {
+				store.getPhases().get(actualTag).setMaximum(timestamp);
 			}
 
 			validLinesRead++;
@@ -164,9 +169,9 @@ public final class ExperimentDataLoader {
 		return this.measures;
 	}
 
-	public Map<Tag, Range<Float>> getPhases(final Measure measure) {
+	public Map<Tag, Range<Float>> getPhases(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
-			return new HashMap<Tag, Range<Float>>();
+			throw new InvalidKeyException();
 		}
 		
 		return this.stores.get(measure).getPhases();
@@ -175,46 +180,46 @@ public final class ExperimentDataLoader {
 	public List<Tag> getAllTags() {
 		final Set<Tag> tags = new LinkedHashSet<Tag>();
 
-		for (final Measure measure : this.measures) {
-			tags.addAll(this.getTags(measure));
-		}
+		this.stores.values().forEach((store) -> {
+			tags.addAll(store.getTags());
+		});
 
 		return new ArrayList<Tag>(tags);
 	}
 
-	public List<Tag> getTags(final Measure measure) {
+	public List<Tag> getTags(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
-			return new ArrayList<Tag>();
+			throw new InvalidKeyException();
 		}
 		
 		return new ArrayList<Tag>(this.stores.get(measure).getTags());
 	}
 
-	public List<DataPoint> getDataPoints(final Measure measure) {
+	public ExperimentDataStore getStore(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
-			return new ArrayList<DataPoint>();
+			throw new InvalidKeyException();
 		}
 		
-		return this.stores.get(measure).getDataPoints();
+		return this.stores.get(measure);
+	}
+
+	public List<DataPoint> getDataPoints(final Measure measure) throws InvalidKeyException {
+		return this.getStore(measure).getDataPoints();
 	}
 
 	/**
 	 * 
 	 * @param measure
-	 * @param optionalTag
+	 * @param optionalTag An {@link Optional} {@link Tag} to filter results
 	 * @return <ul>
-	 *     <li>An empty {@link List} if the given {@link Measure} doesn't exist</li>
 	 *     <li>All points for given {@link Measure} if given {@link Optional}<{@link Tag}> is {@code empty}</li>
 	 *     <li>An empty {@link List} if the given {@link Tag} doesn't exist (for given {@link Measure})</li>
 	 *     <li>Otherwise, the {@link DataPoint}s corresponding to given {@link Measure} and {@link Tag}</li>
 	 * </ul>
+	 * @throws InvalidKeyException If the given {@link Measure} doesn't exist
 	 */
-	public List<DataPoint> getDataPoints(final Measure measure, final Optional<Tag> optionalTag) {
-		if (!this.stores.containsKey(measure)) {
-			return new ArrayList<DataPoint>();
-		}
-		
-		return this.stores.get(measure).getDataPoints(optionalTag);
+	public List<DataPoint> getDataPoints(final Measure measure, final Optional<Tag> optionalTag) throws InvalidKeyException {
+		return this.getStore(measure).getDataPoints(optionalTag);
 	}
 
 }
