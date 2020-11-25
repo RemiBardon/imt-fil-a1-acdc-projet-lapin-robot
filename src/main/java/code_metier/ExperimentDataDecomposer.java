@@ -69,8 +69,12 @@ public class ExperimentDataDecomposer {
 		}
 	}
 
+	public Map<DataType, List<DataPoint>> getAllPoints() {
+		return this.points;
+	}
+
 	public List<DataPoint> getPoints(final DataType type) {
-		return this.points.get(type);
+		return this.getAllPoints().get(type);
 	}
 
 }

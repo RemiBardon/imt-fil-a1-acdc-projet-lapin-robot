@@ -1,5 +1,6 @@
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package code_metier_tests;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -21,13 +22,18 @@ import code_metier.Measure;
 import code_metier.Range;
 import code_metier.Tag;
 
+
+/**
+ * 
+ * @author Rémi BARDON
+ */
 @DisplayName("Cleaner")
 public class ExperimentDataCleanerTest {
 
 	static Constructor<Measure> MEASURE_CONSTRUCTOR;
 	static Constructor<Tag> TAG_CONSTRUCTOR;
 	static Constructor<DataPoint> DATA_POINT_CONSTRUCTOR;
-	
+
 	private ExperimentDataLoader loader;
 	private ExperimentDataCleaner cleaner;
 
@@ -160,7 +166,7 @@ public class ExperimentDataCleanerTest {
 		);
 
 		this.cleaner.clean(this.loader.getDataPoints(measure), this.loader.getPhases(measure));
-		
+
 		for (final var entry : expected.entrySet()) {
 			final Tag tag = entry.getKey();
 			final var actual = this.loader.getDataPoints(measure, Optional.of(tag));

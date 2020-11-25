@@ -1,4 +1,6 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package code_metier_tests;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -23,6 +25,10 @@ import code_metier.ExperimentDataLoader;
 import code_metier.Measure;
 import code_metier.Tag;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 @DisplayName("Decomposer")
 public class ExperimentDataDecomposerTest {
 
@@ -33,7 +39,7 @@ public class ExperimentDataDecomposerTest {
 	private ExperimentDataLoader loader;
 	private ExperimentDataCleaner cleaner;
 	private ExperimentDataDecomposer decomposer;
-	
+
 	/**
 	 * Gets references to package-visible constructors using reflection. For more
 	 * information, see <a href="https://stackoverflow.com/a/14077876/10967642">How
@@ -60,7 +66,7 @@ public class ExperimentDataDecomposerTest {
 		this.cleaner = new ExperimentDataCleaner();
 		this.decomposer = new ExperimentDataDecomposer();
 	}
-	
+
 	@Nested
 	public class Constant {
 
@@ -72,13 +78,13 @@ public class ExperimentDataDecomposerTest {
 		public void setUp() throws Exception {
 			this.loader = new ExperimentDataLoader();
 			this.loader.load(new File("src/test/resources/constant.txt"));
-			
+
 			this.cleaner = new ExperimentDataCleaner();
 			for (final var measure : this.loader.getMeasures()) {
 				final var points = this.loader.getDataPoints(measure);
 				this.cleaner.clean(points, this.loader.getPhases(measure));
 			}
-			
+
 			this.decomposer = new ExperimentDataDecomposer();
 		}
 
@@ -94,18 +100,18 @@ public class ExperimentDataDecomposerTest {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	@Nested
 	@TestInstance(Lifecycle.PER_CLASS)
 	public class Performance {
 
-		Method DATA_POINTS_TO_DOUBLES;
-		
+		private Method DATA_POINTS_TO_DOUBLES;
+
 		private ExperimentDataDecomposer decomposer;
 		private List<DataPoint> points;
-		
+
 		/**
 		 * Gets references to package-visible methods using reflection. For more
 		 * information, see <a href="https://stackoverflow.com/a/34658/10967642">How do I test a private function or a class that has private methods, fields or inner classes?</a>
@@ -127,14 +133,14 @@ public class ExperimentDataDecomposerTest {
 				this.points.add(ExperimentDataDecomposerTest.DATA_POINT_CONSTRUCTOR.newInstance(i, i));
 			}
 		}
-		
+
 		@RepeatedTest(10)
 		@DisplayName("Map List<DataPoint> to double[]")
 		public void testMapDataPointsToDoubleValues() throws Exception {
 			@SuppressWarnings("unused")
 			final var _temp = DATA_POINTS_TO_DOUBLES.invoke(this.decomposer, this.points);
 		}
-		
+
 	}
 
 	@Test

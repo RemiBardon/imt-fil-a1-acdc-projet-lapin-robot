@@ -172,7 +172,7 @@ public final class ExperimentDataLoader {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
 		}
-		
+
 		return this.stores.get(measure).getPhases();
 	}
 
@@ -190,15 +190,19 @@ public final class ExperimentDataLoader {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
 		}
-		
+
 		return new ArrayList<Tag>(this.stores.get(measure).getTags());
+	}
+
+	public Map<Measure, ExperimentDataStore> getStores() {
+		return this.stores;
 	}
 
 	public ExperimentDataStore getStore(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
 		}
-		
+
 		return this.stores.get(measure);
 	}
 

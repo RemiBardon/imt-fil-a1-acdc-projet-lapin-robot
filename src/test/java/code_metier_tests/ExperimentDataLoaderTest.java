@@ -1,5 +1,6 @@
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package code_metier_tests;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -15,6 +16,10 @@ import code_metier.ExperimentDataLoader;
 import code_metier.Measure;
 import code_metier.Tag;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 @DisplayName("Loader")
 public class ExperimentDataLoaderTest {
 

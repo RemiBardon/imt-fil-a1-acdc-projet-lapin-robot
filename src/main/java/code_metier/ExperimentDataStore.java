@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-class ExperimentDataStore {
+public class ExperimentDataStore {
 
 	private List<DataPoint> dataPoints;
 	private Map<Tag, Range<Float>> phases;
-	
+
 	public ExperimentDataStore() {
 		this.dataPoints = new ArrayList<DataPoint>();
 		this.phases = new LinkedHashMap<Tag, Range<Float>>();
 	}
-	
+
 	public List<DataPoint> getDataPoints() {
 		return this.dataPoints;
 	}
@@ -51,7 +51,7 @@ class ExperimentDataStore {
 
 		return result;
 	}
-	
+
 	public Map<Tag, Range<Float>> getPhases() {
 		return this.phases;
 	}

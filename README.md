@@ -57,7 +57,7 @@ Seuls les besoins ont été décidés en commun, l'[API](https://en.wikipedia.or
 
 - Si une plage de données est retirée, la suite doit être "collée" (éditer les `timestamp`s suivants)
 
-## Décisions personnelles
+## Décisions personnelles (Rémi BARDON)
 
 ### Données inaccessibles
 
@@ -73,172 +73,38 @@ Seuls les besoins ont été décidés en commun, l'[API](https://en.wikipedia.or
 > "Les 4 graphiques" désigne ici les graphiques temporels (temps en abscisses) de données brutes, tendance, saisonnalité et bruit (en ordonnées).
 
 - Pas de fichier importé
-  - Affichage de l'**interface vide**
-    - 1 mesure sélectionnée (valeur par défaut)
+  - [x] Affichage de l'**interface vide**
+    - Pas de mesure sélectionnée
+    - 4 données (brut, tendance, saisonnalité, bruit)
     - Pas de tag sélectionné
 - Fichier importé
-  - Affichage de la **pression artérielle** sur les 4 graphiques pour la **séance entière**
+  - [x] Affichage de la **pression artérielle** sur les 4 graphiques pour la **séance entière**
     - 1 mesure sélectionnée
+    - 4 données (brut, tendance, saisonnalité, bruit)
     - Pas de tag sélectionné (séance entière)
-  - Affichage de la **pression artérielle** sur les 4 graphiques pour la **période de début de la séance**
+  - [x] Affichage de la **pression artérielle** sur les 4 graphiques pour la **période de début de la séance**
     - 1 mesure sélectionnée
+    - 4 données (brut, tendance, saisonnalité, bruit)
     - 1 tag sélectionné
-  - Affichage de la **fréquence cardiaque** et de la **fréquence respiratoire** sur les 4 graphiques pour la **période de fin de la séance**
+  - [ ] Affichage de la **fréquence cardiaque** et de la **fréquence respiratoire** sur les 4 graphiques pour la **période de fin de la séance**
     - 2 mesures sélectionnées
+    - 4 données (brut, tendance, saisonnalité, bruit)
     - 1 tag sélectionné
 
 ### Architectural Decision Records (ADR)
 
-- Le `timestamp` stocké dans `DataPoint` est un `float` et non un `Float` pour réduire la taille des objets en mémoire.
-- La valeur d'un `DataPoint` est un `Float` et non un `float` pour permettre l'utilisation des valeurs `NaN`.
-- `DataPoint` ne contient pas de référence à `Tag` pour réduire la taille des objets en mémoire.
+- Le `timestamp` stocké dans [`DataPoint`](src/main/java/code_metier/DataPoint.java) est un `float` et non un `Float` pour réduire la taille des objets en mémoire (important au vu du nombre de données).
+- La valeur d'un [`DataPoint`](src/main/java/code_metier/DataPoint.java) est un `Float` et non un `float` pour permettre l'utilisation des valeurs `NaN`.
+- [`DataPoint`](src/main/java/code_metier/DataPoint.java) ne contient pas de référence à [`Tag`](src/main/java/code_metier/Tag.java) pour réduire la taille des objets en mémoire (important au vu du nombre de données).
+- ~~Les classes [`ExperimentDataLoader`](src/main/java/code_metier/ExperimentDataLoader.java), [`ExperimentDataCleaner`](src/main/java/code_metier/ExperimentDataCleaner.java) et [`ExperimentDataDecomposer`](src/main/java/code_metier/ExperimentDataDecomposer.java) ne sont pas censées être publiques. Par manque de temps, je n'ai pas eu le temps de tout implémenter dans [`ExperimentManager`](src/main/java/code_metier/ExperimentManager.java), donc je les ai laissées publiques pour permettre l'accès à toutes les fonctionnalités si besoin.~~ Normalement tout est disponible, mais j'ai laissé quand même comme ça au cas où.
 
 ### Diagramme de classes
 
 > Remarque: Ceci n'est pas ni diagramme de classes `Java` ni un réel diagramme de classes suivant toutes les normes `UML`. Je l'ai un peu simplifié pour faciliter la lecture.  
-> Par exemple, certaines méthodes comme `toString()` ou `hashCode()` ne sont pas présentes.
+> Par exemple, certaines méthodes comme `toString()` ou `hashCode()` ne sont pas présentes.  
+> J'ai également enlevé les propriétés privées qui prenaient une place trop importante. Le but de ce diagramme est de présenter la partie publique.
 
-@startuml
-'Désactiver l'affichage en couleur des icônes de visibilité'
-skinparam classAttributeIconSize 0
-
-package java {
-    package io {
-        class File
-    }
-    package util {
-        class List<E>
-        class Map<K, V>
-        class Optional<T>
-
-        package regex {
-            class Pattern
-        }
-    }
-    package text {
-        class NumberFormat
-    }
-}
-
-package com.opencsv {
-    class CSVParser
-    class CSVReader
-}
-
-package code_metier {
-
-    enum Mesure {
-        PRESSION_ARTERIELLE
-        SPIROMETRIE
-        PA_MOYENNE
-        FREQUENCE_CARDIAQUE
-        FREQUENCE_RESPIRATOIRE
-    }
-
-    enum DataType {
-        RAW
-        TREND
-        SEASONNALITY
-        NOISE
-    }
-
-    class Tag {
-        - value: String
-        + {static} PREPARATION: Tag
-        ~ Tag(value: String)
-        + toString(): String
-    }
-
-    class DataPoint {
-        - timestamp: float
-        - value: float
-        ~ DataPoint(timestamp: float, value: float)
-        + getTimestamp(): float
-        + getValue(): float
-    }
-
-    class ExperimentPhase {
-        ~ tag: Tag
-        ~ start: float
-        ~ end: float
-        ~ ExperimentPhase(tag: Tag, start: float, end: float)
-        + getTag(): Tag
-        + setTag(tag: Tag)
-        + getStart(): float
-        + setStart(start: float)
-        + getEnd(): float
-        + setEnd(end: float)
-    }
-    
-    class Range<T> {
-        - minimum: T
-        - maximum: T
-        + Range(minimum: T, maximum: T)
-        + getMinimum(): T
-        + getMaximum(): T
-    }
-
-    class RabitDataLoader {
-        - {static} DELIMITER: char
-        - {static} PERIOD: int
-        - {static} TAG_PREFIX: Pattern
-        - {static} FORMAT: NumberFormat
-
-        - headingComment: String
-        - phases: Map<Mesure, List<ExperimentPhase>>
-        - phasesByTag: Map<Mesure, Map<Tag, ExperimentPhase>>
-        - phasesByStart: Map<Mesure, Map<Float, ExperimentPhase>>
-        - phasesByEnd: Map<Mesure, Map<Float, ExperimentPhase>>
-        - points: Map<DataType, Map<Mesure, List<DataPoint>>>
-        - omittedPoints: Map<Mesure, Map<Range<Float>, List<DataPoint>>>
-
-        + RabitDataLoader()
-
-        + reset()
-        - {static} addMissingDataTypes(map: Map<DataType, T>, supplier: Supplier<T>)
-        - {static} addMissingMeasures(map: Map<DataType, T>, supplier: Supplier<T>)
-
-        + load(file: File) throws
-        + cleanData()
-        + decomposeData()
-
-        - {static} dataPointsValues(points: List<DataPoint>): double[]
-
-        + getTags(Mesure mesure): List<Tag>
-        + getPhases(final Mesure mesure): List<ExperimentPhase>
-
-        + getPoint(type: DataType, mesure: Mesure, timestamp: Float): Optional<DataPoint>
-        + getAllPoints(type: DataType, mesures: List<Mesure>, timestamp: Float): Map<Mesure, Optional<DataPoint>>
-        + getPoints(type: DataType, mesure: Mesure, tag: Optional<Tag>): List<DataPoint>
-        + getAllPoints(type: DataType, mesures: List<Mesure>, tag: Optional<Tag>): Map<Mesure, List<DataPoint>>
-        + getPoints(mesure: Mesure, timestamp: Float): Map<DataType, Optional<DataPoint>>
-        + getAllPoints(mesures: List<Mesure>, timestamp: Float): Map<DataType, Map<Mesure, Optional<DataPoint>>>
-        + getPoints(mesure: Mesure, tag: Optional<Tag>): Map<DataType, List<DataPoint>>
-        + getAllPoints(mesures: List<Mesure>, tag: Optional<Tag>): Map<DataType, Map<Mesure, List<DataPoint>>>
-
-        + getValueRange(points: List<DataPoint>): Range<Float>
-        + getValueRangeFromMap<T>(points: Map<T, List<DataPoint>>): Map<T, Range<Float>>
-        + getValueRangeFromNestedMap<S, T>(points: Map<S, Map<T, List<DataPoint>>>): Map<S, Map<T, Range<Float>>>
-
-        + getOmittedRanges(mesure: Mesure): List<Range<Float>>
-        + getAllOmittedRanges(): List<Range<Float>>
-        + getOmittedPoints(mesure: Mesure, range: Range<Float>): List<DataPoint>
-
-        + getHeadingComment(): String
-    }
-
-    RabitDataLoader <-down[dotted]- DataType
-    RabitDataLoader <-down[dotted]- Mesure
-    RabitDataLoader <-down[dotted]- Tag
-    RabitDataLoader <-down[dotted]- DataPoint
-    RabitDataLoader <-down[dotted]- ExperimentPhase
-    RabitDataLoader <-down[dotted]- Range
-
-}
-
-code_metier <-down[dotted]- java
-code_metier <-down[dotted]- com.opencsv
-@enduml
+![Image](assets/uml.png)
 
 ### Structure du projet Java
 
@@ -250,23 +116,90 @@ Pour faciliter l'utilisation de packages permettant la lecture de fichiers [CSV]
 
 Le nommage des packages a été fait en suivant les [conventions de nommage](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html) décrites par Oracle.
 
+## Dépendances
+
+- `code_metier`
+  - [OpenCSV](https://mvnrepository.com/artifact/com.opencsv/opencsv) : Lecture et sérialisation de fichiers `CSV`.
+  - [stl-decomp-4j](https://mvnrepository.com/artifact/com.github.servicenow.stl4j/stl-decomp-4j) : Décomposition de données temporelles
+  - [JUnit 5](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter) : Tests unitaires
+
 ## Prérequis
+
+> TODO
 
 ## Utilisation
 
-```java
-final File file = new File(/* ... */);
-final RabitDataLoader loader = new RabitDataLoader();
+### `code_metier`
 
-try {
-    loader.load(file)
-    loader.cleanData()
-    loader.decomposeData()
-} catch(final IOException e) {
-    e.printStackTrace();
-} catch(final CsvValidationException e) {
-    e.printStackTrace();
-} catch(final NumberFormatException e) {
-    e.printStackTrace();
-}
+```java
+// Class fields (local for demonstration)
+int period = 4;
+Measure selectedMeasure;
+Optional<Tag> selectedTag = Optional.empty();
+String headingComment = "";
+List<Measure> measures;
+List<Tag> tags;
+Map<DataType, List<DataPoint>> dataPoints;
+
+File file;
+final ExperimentManager manager = new ExperimentManager();
+this.manager.setLoggingEnabled(false); // Default value
+this.manager.setPreComputingEnabled(true); // Default value
+
+// ...
+
+file = new File(/* ... */);
+
+// Load file
+this.manager.load(
+    this.file,
+    (progress, total) -> {
+        System.out.println("Loading: " + progress + "/" + total);
+
+        // Update UI
+    },
+    (measures, tags) -> {
+        System.out.println("Finished loading");
+        System.out.println("Measures: " + measures + "; Tags: " + tags);
+
+        this.measures = measures;
+        this.tags = tags;
+        this.headingComment = this.manager.getHeadingComment();
+
+        // Update UI
+    }
+);
+
+// ...
+
+this.selectedMeasure = /* ... */;
+this.selectedTag = Optional.of(/* ... */);
+
+this.manager.decompose(
+    this.file,
+    this.selectedMeasure,
+    this.period,
+    (progress, total) -> {
+        System.out.println("Decomposing " + progress + "/" + total);
+
+        // Update UI
+    },
+    (pointsPerType) -> {
+        System.out.println("Finished decomposing");
+
+        this.dataPoints = pointsPerType;
+        // Or
+        // this.dataPoints = this.manager.getDataPoints(this.selectedMeasure, this.selectedTag);
+
+        // Update UI
+    }
+);
 ```
+
+## Tests unitaires
+
+Les tests unitaires, écrits avec [JUnit 5](https://junit.org/junit5/), couvrent toutes les méthodes les plus importantes de [`ExperimentDataLoader`](src/main/java/code_metier/ExperimentDataLoader.java), [`ExperimentDataCleaner`](src/main/java/code_metier/ExperimentDataCleaner.java), [`ExperimentDataDecomposer`](src/main/java/code_metier/ExperimentDataDecomposer.java) et [`ExperimentManager`](src/main/java/code_metier/ExperimentManager.java).
+
+J'ai créé deux *test suites*, une nommée `"All Tests"`, qui exécute tous les tests, et une nommée `"Fast Tests"`, qui évite l'exécution des tests sur données réelles (pratique pour le *coverage*). La différence entre les tests rapides (normaux) et les tests lents est faite grâce à l'annotation [`@Slow`](src/test/java/code_metier_tests/Slow.java) qui applique le [Tag JUnit](https://junit.org/junit5/docs/current/user-guide/#writing-tests-tagging-and-filtering) `"slow"`.
+
+En parlant de *coverage*, depuis que je suis passé à [JUnit 5](https://junit.org/junit5/), je n'ai pas réussi à exécuter les tests pour du *coverage*. La console d'[Eclipse](https://www.eclipse.org/) envoie plein d'erreurs, et après des heures de recherches je n'ai pas réussi à les régler.

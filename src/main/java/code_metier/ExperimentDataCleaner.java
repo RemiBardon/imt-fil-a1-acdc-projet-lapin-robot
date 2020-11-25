@@ -118,20 +118,20 @@ public class ExperimentDataCleaner {
 		points.removeIf(ExperimentDataCleaner::shouldRemovePoint);
 	}
 
-	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
-		if (!this.omittedPoints.containsKey(range)) {
-			return new ArrayList<DataPoint>();
-		}
-
-		return this.omittedPoints.get(range);
-	}
-
 	public List<Range<Float>> getOmittedRanges() {
 		final List<Range<Float>> omittedRanges = new ArrayList<Range<Float>>(this.omittedPoints.keySet());
 
 		Collections.sort(omittedRanges);
 
 		return omittedRanges;
+	}
+
+	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
+		if (!this.omittedPoints.containsKey(range)) {
+			return new ArrayList<DataPoint>();
+		}
+
+		return this.omittedPoints.get(range);
 	}
 
 }
