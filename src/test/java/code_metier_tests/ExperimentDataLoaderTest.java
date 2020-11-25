@@ -34,6 +34,7 @@ public class ExperimentDataLoaderTest {
 	 * 
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
+	 * @author Rémi BARDON
 	 */
 	@BeforeAll
 	public static void getConstructors() throws Exception {
@@ -47,6 +48,11 @@ public class ExperimentDataLoaderTest {
 		DATA_POINT_CONSTRUCTOR.setAccessible(true);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Create Default Measure Names")
 	public void testDefaultMeasureNames() throws Exception {
@@ -71,6 +77,11 @@ public class ExperimentDataLoaderTest {
 		assertArrayEquals(measures2, loader.getMeasures().toArray());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Read Accented Tags")
 	public void testReadAccentedTags() throws Exception {
@@ -85,6 +96,11 @@ public class ExperimentDataLoaderTest {
 		assertArrayEquals(expected, loader.getAllTags().toArray(), "Tags: " + loader.getAllTags());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Read Points")
 	public void testReadDataPoints() throws Exception {
@@ -96,6 +112,11 @@ public class ExperimentDataLoaderTest {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Read File Header")
 	public void testReadHeader() throws Exception {
@@ -106,6 +127,11 @@ public class ExperimentDataLoaderTest {
 		assertEquals(expected, loader.getHeadingComment());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Read Measure Names")
 	public void testReadMeasureNames() throws Exception {
@@ -122,6 +148,11 @@ public class ExperimentDataLoaderTest {
 		assertArrayEquals(measures, loader.getMeasures().toArray());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Read Tags")
 	public void testReadTags() throws Exception {
@@ -136,6 +167,11 @@ public class ExperimentDataLoaderTest {
 		assertArrayEquals(expected, loader.getAllTags().toArray(), "Tags: " + loader.getAllTags());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Get Points By Tag")
 	public void testStoreDataPointsByTag() throws Exception {
@@ -155,6 +191,11 @@ public class ExperimentDataLoaderTest {
 		assertArrayEquals(expected, loader.getDataPoints(measure, tag).toArray());
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@DisplayName("Read Real Data")

@@ -8,18 +8,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 public class ExperimentDataCleaner {
 
-	private static boolean shouldRemovePoint(final DataPoint point) {
-		return point.getValue().isNaN();
-	}
-
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private final Map<Range<Float>, List<DataPoint>> omittedPoints;
 
+	/**
+	 * A class responsible for cleaning data points
+	 * @author Rémi BARDON
+	 */
 	public ExperimentDataCleaner() {
 		this.omittedPoints = new HashMap<Range<Float>, List<DataPoint>>();
 	}
 
+	/**
+	 * 
+	 * @param points
+	 * @param phases
+	 * @author Rémi BARDON
+	 */
 	public void clean(final List<DataPoint> points, final Map<Tag, Range<Float>> phases) {
 		this.omittedPoints.clear();
 
@@ -118,6 +132,21 @@ public class ExperimentDataCleaner {
 		points.removeIf(ExperimentDataCleaner::shouldRemovePoint);
 	}
 
+	/**
+	 * A function saying whether or not a point should be removed. Could use the {@code Chanin Of Responsibility} pattern if it grows too big.
+	 * @param point
+	 * @return
+	 * @author Rémi BARDON
+	 */
+	private static boolean shouldRemovePoint(final DataPoint point) {
+		return point.getValue().isNaN();
+	}
+
+	/**
+	 * The ranges omitted while cleaning
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<Range<Float>> getOmittedRanges() {
 		final List<Range<Float>> omittedRanges = new ArrayList<Range<Float>>(this.omittedPoints.keySet());
 
@@ -126,6 +155,12 @@ public class ExperimentDataCleaner {
 		return omittedRanges;
 	}
 
+	/**
+	 * The omitted points in a certain {@link Range}
+	 * @param range
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
 		if (!this.omittedPoints.containsKey(range)) {
 			return new ArrayList<DataPoint>();

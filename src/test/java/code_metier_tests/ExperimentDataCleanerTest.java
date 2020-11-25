@@ -44,6 +44,7 @@ public class ExperimentDataCleanerTest {
 	 * 
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
+	 * @author Rémi BARDON
 	 */
 	@BeforeAll
 	public static void getConstructors() throws Exception {
@@ -57,12 +58,21 @@ public class ExperimentDataCleanerTest {
 		DATA_POINT_CONSTRUCTOR.setAccessible(true);
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@BeforeEach
 	public void setUp() {
 		this.loader = new ExperimentDataLoader();
 		this.cleaner = new ExperimentDataCleaner();
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Offset Points Timestamps To Remove Holes")
 	public void testOffsetTimestamps() throws Exception {
@@ -133,6 +143,11 @@ public class ExperimentDataCleanerTest {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Offset Phases While Cleaning")
 	public void testPhasesOffset() throws Exception {
@@ -174,6 +189,11 @@ public class ExperimentDataCleanerTest {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Skip Bad Values")
 	public void testSkipBadValues() throws Exception {
@@ -186,6 +206,11 @@ public class ExperimentDataCleanerTest {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@DisplayName("Store Omitted Ranges")
 	public void testStoreOmittedRanges() throws Exception {
@@ -240,6 +265,11 @@ public class ExperimentDataCleanerTest {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@DisplayName("Clean Real Data")

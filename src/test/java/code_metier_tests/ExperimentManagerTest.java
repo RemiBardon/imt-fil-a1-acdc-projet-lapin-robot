@@ -39,6 +39,7 @@ class ExperimentManagerTest {
 	 * 
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
+	 * @author Rémi BARDON
 	 */
 	@BeforeAll
 	public static void getMethods() throws Exception {
@@ -46,6 +47,10 @@ class ExperimentManagerTest {
 		CLEAN.setAccessible(true);
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@BeforeEach
 	public void setUp() {
 		this.manager = new ExperimentManager();
@@ -53,12 +58,21 @@ class ExperimentManagerTest {
 		this.manager.setPreComputingEnabled(false);
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@AfterEach
 	public void tearDown() {
 		this.manager.setLoggingEnabled(true);
 		this.manager.stopBackgroundThreads();
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@Timeout(1)
@@ -104,6 +118,11 @@ class ExperimentManagerTest {
 		assertTrue(result.getValue() != null);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@Timeout(1)
@@ -141,6 +160,11 @@ class ExperimentManagerTest {
 		assertTrue(result.getValue() != null);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@Timeout(15)
@@ -178,20 +202,40 @@ class ExperimentManagerTest {
 		assertTrue(result.getValue() != null);
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 * @param <T>
+	 */
 	class AsyncResult<T> {
 
 		private boolean available = false;
 		private T value = null;
 
+		/**
+		 * 
+		 * @return
+		 * @author Rémi BARDON
+		 */
 		T getValue() {
 			return this.value;
 		}
 
+		/**
+		 * 
+		 * @param value
+		 * @author Rémi BARDON
+		 */
 		void setValue(T value) {
 			this.value = value;
 			this.available = true;
 		}
 
+		/**
+		 * 
+		 * @return
+		 * @author Rémi BARDON
+		 */
 		boolean isAvailable() {
 			return this.available;
 		}

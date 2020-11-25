@@ -2,23 +2,42 @@ package code_metier;
 
 /**
  * A tag present in the data file, representing a period during the experiment
- * 
  * @author Rémi BARDON
  */
 public final class Measure {
 
 	/**
 	 * The name of the {@link Measure}
+	 * @author Rémi BARDON
 	 */
 	private String name;
 
 	/**
 	 * A simple constructor
-	 * 
 	 * @param value The name of the {@link Measure}
+	 * @author Rémi BARDON
 	 */
 	Measure(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * A getter for {@code Measure.name}
+	 * @return The name of the {@link Measure}
+	 * @author Rémi BARDON
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * A string representation of the {@link Measure}
+	 * @return The string value of the {@link Measure}
+	 * @author Rémi BARDON
+	 */
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 
 	@Override
@@ -35,28 +54,9 @@ public final class Measure {
 		return false;
 	}
 
-	/**
-	 * A getter for {@code Measure.name}
-	 * 
-	 * @return The name of the {@link Measure}
-	 */
-	public String getName() {
-		return this.name;
-	}
-
 	@Override
 	public int hashCode() {
 		return name.hashCode();
-	}
-
-	/**
-	 * A string representation of the {@link Measure}
-	 * 
-	 * @return The string value of the {@link Measure}
-	 */
-	@Override
-	public String toString() {
-		return this.getName();
 	}
 
 }

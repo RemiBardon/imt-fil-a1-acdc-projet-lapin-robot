@@ -9,11 +9,15 @@ public final class DataPoint {
 
 	/**
 	 * The time of recording the data
+	 * 
+	 * @author Rémi BARDON
 	 */
 	private float timestamp;
 
 	/**
 	 * The recorded value
+	 * 
+	 * @author Rémi BARDON
 	 */
 	private Float value;
 
@@ -22,10 +26,41 @@ public final class DataPoint {
 	 * 
 	 * @param timestamp The time of recording the data
 	 * @param value     The recorded value
+	 * @author Rémi BARDON
 	 */
 	DataPoint(float timestamp, Float value) {
 		this.timestamp = timestamp;
 		this.value = value;
+	}
+
+	/**
+	 * The time of recording the data
+	 * 
+	 * @return The time from the start of the experiment
+	 * @author Rémi BARDON
+	 */
+	public float getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
+	 * Sets the time of recording the data
+	 * 
+	 * @param timestamp The new timestamp value
+	 * @author Rémi BARDON
+	 */
+	public void setTimestamp(float timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	/**
+	 * The recorded value
+	 * 
+	 * @return The recorded floating-point value
+	 * @author Rémi BARDON
+	 */
+	public Float getValue() {
+		return this.value;
 	}
 
 	@Override
@@ -40,33 +75,6 @@ public final class DataPoint {
 		}
 
 		return false;
-	}
-
-	/**
-	 * The time of recording the data
-	 * 
-	 * @return The number of milliseconds from the start of the experiment
-	 */
-	public float getTimestamp() {
-		return this.timestamp;
-	}
-
-	/**
-	 * The recorded value
-	 * 
-	 * @return The recorded floating-point value
-	 */
-	public Float getValue() {
-		return this.value;
-	}
-
-	/**
-	 * Sets the time of recording the data
-	 * 
-	 * @param timestamp The new timestamp value
-	 */
-	public void setTimestamp(float timestamp) {
-		this.timestamp = timestamp;
 	}
 
 	@Override

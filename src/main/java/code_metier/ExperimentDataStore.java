@@ -6,16 +6,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 public class ExperimentDataStore {
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private List<DataPoint> dataPoints;
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private Map<Tag, Range<Float>> phases;
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	public ExperimentDataStore() {
 		this.dataPoints = new ArrayList<DataPoint>();
 		this.phases = new LinkedHashMap<Tag, Range<Float>>();
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getDataPoints() {
 		return this.dataPoints;
 	}
@@ -27,6 +48,7 @@ public class ExperimentDataStore {
 	 *     <li>An empty {@link List} if the given {@link Tag} doesn't exist</li>
 	 *     <li>Otherwise, the {@link DataPoint}s corresponding to given {@link Tag}</li>
 	 * </ul>
+	 * @author Rémi BARDON
 	 */
 	public List<DataPoint> getDataPoints(final Optional<Tag> optionalTag) {
 		if (optionalTag.isEmpty()) {
@@ -52,12 +74,22 @@ public class ExperimentDataStore {
 		return result;
 	}
 
-	public Map<Tag, Range<Float>> getPhases() {
-		return this.phases;
-	}
-
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<Tag> getTags() {
 		return new ArrayList<Tag>(this.phases.keySet());
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
+	public Map<Tag, Range<Float>> getPhases() {
+		return this.phases;
 	}
 
 }

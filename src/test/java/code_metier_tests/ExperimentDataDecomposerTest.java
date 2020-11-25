@@ -47,6 +47,7 @@ public class ExperimentDataDecomposerTest {
 	 * 
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
+	 * @author Rémi BARDON
 	 */
 	@BeforeAll
 	public static void getConstructors() throws Exception {
@@ -60,6 +61,10 @@ public class ExperimentDataDecomposerTest {
 		DATA_POINT_CONSTRUCTOR.setAccessible(true);
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@BeforeEach
 	public void setUp() {
 		this.loader = new ExperimentDataLoader();
@@ -67,6 +72,10 @@ public class ExperimentDataDecomposerTest {
 		this.decomposer = new ExperimentDataDecomposer();
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@Nested
 	public class Constant {
 
@@ -103,6 +112,10 @@ public class ExperimentDataDecomposerTest {
 
 	}
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	@Nested
 	@TestInstance(Lifecycle.PER_CLASS)
 	public class Performance {
@@ -118,6 +131,7 @@ public class ExperimentDataDecomposerTest {
 		 * 
 		 * @throws NoSuchMethodException
 		 * @throws SecurityException
+		 * @author Rémi BARDON
 		 */
 		@BeforeAll
 		public void getMethods() throws Exception {
@@ -125,6 +139,11 @@ public class ExperimentDataDecomposerTest {
 			DATA_POINTS_TO_DOUBLES.setAccessible(true);
 		}
 
+		/**
+		 * 
+		 * @throws Exception
+		 * @author Rémi BARDON
+		 */
 		@BeforeEach
 		public void setUp() throws Exception {
 			this.decomposer = new ExperimentDataDecomposer();
@@ -134,6 +153,11 @@ public class ExperimentDataDecomposerTest {
 			}
 		}
 
+		/**
+		 * 
+		 * @throws Exception
+		 * @author Rémi BARDON
+		 */
 		@RepeatedTest(10)
 		@DisplayName("Map List<DataPoint> to double[]")
 		public void testMapDataPointsToDoubleValues() throws Exception {
@@ -143,6 +167,11 @@ public class ExperimentDataDecomposerTest {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @author Rémi BARDON
+	 */
 	@Test
 	@Slow
 	@DisplayName("Decompose Real Data")

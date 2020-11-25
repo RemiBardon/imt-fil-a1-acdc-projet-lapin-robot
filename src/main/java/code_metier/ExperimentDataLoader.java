@@ -23,23 +23,67 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 public final class ExperimentDataLoader {
 
+	/**
+	 * The {@code CSV} delimiter
+	 * @author Rémi BARDON
+	 */
 	private static char DELIMITER = '\t';
+	/**
+	 * The comment prefix for file header
+	 * @author Rémi BARDON
+	 */
 	private static Pattern COMMENT_PREFIX = Pattern.compile("^#\s?");
+	/**
+	 * The French {@link NumberFormat} for decoding comma ({@code ,}) separated decimal numbers
+	 * @author Rémi BARDON
+	 */
 	private static NumberFormat FORMAT = NumberFormat.getInstance(Locale.FRANCE);
+	/**
+	 * The prefix for {@link Tag}s in data files
+	 * @author Rémi BARDON
+	 */
 	private static Pattern TAG_PREFIX = Pattern.compile("^#\\* ");
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private String headingComment;
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private List<Measure> measures;
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private Map<Measure, ExperimentDataStore> stores;
 
+	/**
+	 * A class responsible for loading data points from a {@code CSV} file
+	 * @author Rémi BARDON
+	 */
 	public ExperimentDataLoader() {
 		this.headingComment = "";
 		this.measures = new ArrayList<Measure>();
 		this.stores = new HashMap<Measure, ExperimentDataStore>();
 	}
 
+	/**
+	 * 
+	 * @param file The {@link File} to load and parse
+	 * @throws IOException
+	 * @throws CsvValidationException
+	 * @throws ParseException
+	 * @author Rémi BARDON
+	 */
 	public void load(final File file) throws IOException, CsvValidationException, ParseException {
 		CSVReader csvReader = null;
 
@@ -58,6 +102,14 @@ public final class ExperimentDataLoader {
 		}
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param csvReader
+	 * @throws IOException
+	 * @throws CsvValidationException
+	 * @author Rémi BARDON
+	 */
 	private void readHeader(final File file, final CSVReader csvReader) throws IOException, CsvValidationException {
 		this.headingComment = "";
 		this.measures.clear();
@@ -97,6 +149,15 @@ public final class ExperimentDataLoader {
 		}
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param csvReader
+	 * @throws CsvValidationException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @author Rémi BARDON
+	 */
 	private void readDataPoints(final File file, final CSVReader csvReader) throws CsvValidationException, IOException, ParseException {
 		this.stores.clear();
 		Tag actualTag = Tag.PREPARATION;
@@ -160,14 +221,31 @@ public final class ExperimentDataLoader {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public String getHeadingComment() {
 		return this.headingComment;
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<Measure> getMeasures() {
 		return this.measures;
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @return
+	 * @throws InvalidKeyException
+	 * @author Rémi BARDON
+	 */
 	public Map<Tag, Range<Float>> getPhases(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
@@ -176,6 +254,11 @@ public final class ExperimentDataLoader {
 		return this.stores.get(measure).getPhases();
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<Tag> getAllTags() {
 		final Set<Tag> tags = new LinkedHashSet<Tag>();
 
@@ -186,6 +269,13 @@ public final class ExperimentDataLoader {
 		return new ArrayList<Tag>(tags);
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @return
+	 * @throws InvalidKeyException
+	 * @author Rémi BARDON
+	 */
 	public List<Tag> getTags(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
@@ -194,10 +284,22 @@ public final class ExperimentDataLoader {
 		return new ArrayList<Tag>(this.stores.get(measure).getTags());
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public Map<Measure, ExperimentDataStore> getStores() {
 		return this.stores;
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @return
+	 * @throws InvalidKeyException
+	 * @author Rémi BARDON
+	 */
 	public ExperimentDataStore getStore(final Measure measure) throws InvalidKeyException {
 		if (!this.stores.containsKey(measure)) {
 			throw new InvalidKeyException();
@@ -206,6 +308,13 @@ public final class ExperimentDataLoader {
 		return this.stores.get(measure);
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @return
+	 * @throws InvalidKeyException
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getDataPoints(final Measure measure) throws InvalidKeyException {
 		return this.getStore(measure).getDataPoints();
 	}
@@ -220,6 +329,7 @@ public final class ExperimentDataLoader {
 	 *     <li>Otherwise, the {@link DataPoint}s corresponding to given {@link Measure} and {@link Tag}</li>
 	 * </ul>
 	 * @throws InvalidKeyException If the given {@link Measure} doesn't exist
+	 * @author Rémi BARDON
 	 */
 	public List<DataPoint> getDataPoints(final Measure measure, final Optional<Tag> optionalTag) throws InvalidKeyException {
 		return this.getStore(measure).getDataPoints(optionalTag);

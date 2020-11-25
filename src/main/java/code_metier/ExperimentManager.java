@@ -37,6 +37,10 @@ public class ExperimentManager {
 	private Map<String, Thread> decomposingThreads;
 	private Map<String, Map<Measure, Map<DataType, List<DataPoint>>>> decomposedPointsCache;
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	public ExperimentManager() {
 		this.loader = new ExperimentDataLoader();
 		this.cleaner = new ExperimentDataCleaner();
@@ -114,6 +118,13 @@ public class ExperimentManager {
 		thread.start();
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @param progressCallback
+	 * @param completionHandler
+	 * @author Rémi BARDON
+	 */
 	private void clean(
 		final Measure measure,
 		final BiConsumer<Integer, Integer> progressCallback,
@@ -175,6 +186,12 @@ public class ExperimentManager {
 		thread.start();
 	}
 
+	/**
+	 * Asynchronously cleans {@link DataPoint}s on a background thread and caches results
+	 * @param loader
+	 * @param filePath
+	 * @author Rémi BARDON
+	 */
 	private void cleanOnBackgroundThread(final ExperimentDataLoader loader, final String filePath) {
 		final String fileName = new File(filePath).getName();
 
@@ -204,6 +221,14 @@ public class ExperimentManager {
 		cleaningThread.start();
 	}
 
+	/**
+	 * Asynchronously decomposes {@link DataPoint} series into {@link DataType}s after cleaning them
+	 * @param measure
+	 * @param period
+	 * @param progressCallback
+	 * @param completionHandler
+	 * @author Rémi BARDON
+	 */
 	public void decompose(
 		final Measure measure,
 		final int period,
@@ -247,6 +272,11 @@ public class ExperimentManager {
 		);
 	}
 
+	/**
+	 * Cleans cached data for a specific {@link File}
+	 * @param filePath A {@link File} path
+	 * @author Rémi BARDON
+	 */
 	public void emptyCache(final String filePath) {
 		if (this.decomposingThreads.containsKey(filePath)) {
 			this.decomposingThreads.get(filePath).interrupt();
@@ -259,6 +289,10 @@ public class ExperimentManager {
 		this.cleanedPointsCache.remove(filePath);
 	}
 
+	/**
+	 * Stops all background {@link Thread}s
+	 * @author Rémi BARDON
+	 */
 	public void stopBackgroundThreads() {
 		final Consumer<Thread> interrupt = (thread) -> { thread.interrupt(); };
 
@@ -269,10 +303,22 @@ public class ExperimentManager {
 		if (this.isLoggingEnabled) { System.out.println("Stopped all background threads"); }
 	}
 
+	/**
+	 * Returns the {@code CSV} {@link File} header (lines starting with {@code "# "})
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public String getHeadingComment() {
 		return this.loader.getHeadingComment();
 	}
 
+	/**
+	 * 
+	 * @param measure
+	 * @return
+	 * @throws InvalidKeyException
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getDataPoints(final Measure measure) throws InvalidKeyException {
 		return this.loader.getDataPoints(measure);
 	}
@@ -287,23 +333,45 @@ public class ExperimentManager {
 	 *     <li>Otherwise, the {@link DataPoint}s corresponding to given {@link Measure} and {@link Tag}</li>
 	 * </ul>
 	 * @throws InvalidKeyException If the given {@link Measure} doesn't exist
+	 * @author Rémi BARDON
 	 */
 	public List<DataPoint> getDataPoints(final Measure measure, final Optional<Tag> optionalTag) throws InvalidKeyException {
 		return this.loader.getDataPoints(measure, optionalTag);
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<Range<Float>> getOmittedRanges() {
 		return this.cleaner.getOmittedRanges();
 	}
 
+	/**
+	 * 
+	 * @param range
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getOmittedPoints(final Range<Float> range) {
 		return this.cleaner.getOmittedPoints(range);
 	}
 
+	/**
+	 * Enables/disables debug logging. Default is {@code false}
+	 * @param enabled
+	 * @author Rémi BARDON
+	 */
 	public void setLoggingEnabled(final boolean enabled) {
 		this.isLoggingEnabled = enabled;
 	}
 
+	/**
+	 * Enables/disables background pre-loading and computing of {@link File}s data. Default is {@code true}
+	 * @param enabled
+	 * @author Rémi BARDON
+	 */
 	public void setPreComputingEnabled(final boolean enabled) {
 		this.isPreComputingEnabled = enabled;
 	}

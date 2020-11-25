@@ -8,22 +8,26 @@ package code_metier;
 public enum DataType {
 
 	/**
-	 * {@code RAW = TREND + SEASONNALITY + NOISE}
+	 * {@link DataType#RAW} = {@link DataType#TREND} + {@link DataType#SEASONNALITY} + {@link DataType#NOISE}
+	 * @author Rémi BARDON
 	 */
 	RAW,
 
 	/**
-	 * {@code TREND = Moving Average of RAW}
+	 * {@link DataType#TREND} = Moving Average of {@link DataType#RAW}
+	 * @author Rémi BARDON
 	 */
 	TREND,
 
 	/**
-	 * {@code SEASONNALITY = Seasonal Pattern in RAW}
+	 * {@link DataType#SEASONNALITY} = Seasonal Pattern in {@link DataType#RAW}
+	 * @author Rémi BARDON
 	 */
 	SEASONNALITY,
 
 	/**
-	 * {@code NOISE = RAW - TREND - SEASONNALITY}
+	 * {@link DataType#NOISE} = {@link DataType#RAW} - {@link DataType#TREND} - {@link DataType#SEASONNALITY}
+	 * @author Rémi BARDON
 	 */
 	NOISE
 

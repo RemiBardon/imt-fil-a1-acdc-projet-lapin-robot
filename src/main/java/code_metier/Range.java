@@ -7,22 +7,78 @@ package code_metier;
  */
 public final class Range<T extends Comparable<T>> implements Comparable<Range<T>> {
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private T minimum;
 
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private T maximum;
 
+	/**
+	 * 
+	 * @param minimum
+	 * @param maximum
+	 * @author Rémi BARDON
+	 */
 	public Range(T minimum, T maximum) {
 		this.minimum = minimum;
 		this.maximum = maximum;
 	}
 
-	@Override
-	public int compareTo(Range<T> o) {
-		return this.getMinimum().compareTo(o.getMinimum());
-	}
-
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public boolean contains(final T value) {
 		return this.getMinimum().compareTo(value) <= 0 && this.getMaximum().compareTo(value) >= 0;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
+	public T getMaximum() {
+		return this.maximum;
+	}
+
+	/**
+	 * 
+	 * @param minimum
+	 * @author Rémi BARDON
+	 */
+	public void setMinimum(final T minimum) {
+		this.minimum = minimum;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
+	public T getMinimum() {
+		return this.minimum;
+	}
+
+	/**
+	 * 
+	 * @param maximum
+	 * @author Rémi BARDON
+	 */
+	public void setMaximum(final T maximum) {
+		this.maximum = maximum;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + this.getMinimum() + "..." + this.getMaximum() + ")";
 	}
 
 	@Override
@@ -40,30 +96,14 @@ public final class Range<T extends Comparable<T>> implements Comparable<Range<T>
 		return false;
 	}
 
-	public T getMaximum() {
-		return this.maximum;
-	}
-
-	public T getMinimum() {
-		return this.minimum;
+	@Override
+	public int compareTo(Range<T> o) {
+		return this.getMinimum().compareTo(o.getMinimum());
 	}
 
 	@Override
 	public int hashCode() {
 		return minimum.hashCode() * maximum.hashCode();
-	}
-
-	public void setMaximum(final T maximum) {
-		this.maximum = maximum;
-	}
-
-	public void setMinimum(final T minimum) {
-		this.minimum = minimum;
-	}
-
-	@Override
-	public String toString() {
-		return "(" + this.getMinimum() + "..." + this.getMaximum() + ")";
 	}
 
 }

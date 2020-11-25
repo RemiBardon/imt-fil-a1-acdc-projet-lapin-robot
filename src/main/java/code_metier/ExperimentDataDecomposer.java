@@ -8,25 +8,32 @@ import java.util.Map;
 
 import com.github.servicenow.ds.stats.stl.SeasonalTrendLoess;
 
+/**
+ * 
+ * @author Rémi BARDON
+ */
 public class ExperimentDataDecomposer {
 
-	private static double[] dataPointsValues(final List<DataPoint> points) {
-		final double[] result = new double[points.size()];
-		final Iterator<DataPoint> iterator = points.iterator();
-
-		for (int i = 0; i < result.length; i++) {
-			result[i] = iterator.next().getValue();
-		}
-
-		return result;
-	}
-
+	/**
+	 * 
+	 * @author Rémi BARDON
+	 */
 	private Map<DataType, List<DataPoint>> points;
 
+	/**
+	 * A class responsible for decomposing data points into the different {@link DataType}s
+	 * @author Rémi BARDON
+	 */
 	public ExperimentDataDecomposer() {
 		this.points = new HashMap<DataType, List<DataPoint>>();
 	}
 
+	/**
+	 * 
+	 * @param points
+	 * @param period
+	 * @author Rémi BARDON
+	 */
 	public void decompose(final List<DataPoint> points, final int period) {
 		this.points.clear();
 
@@ -69,10 +76,38 @@ public class ExperimentDataDecomposer {
 		}
 	}
 
+	/**
+	 * Converts {@link List}<{@link DataPoint}> into {@link double[]} (mapping {@link DataPoint}s to their {@code value}
+	 * @param points
+	 * @return
+	 * @author Rémi BARDON
+	 */
+	private static double[] dataPointsValues(final List<DataPoint> points) {
+		final double[] result = new double[points.size()];
+		final Iterator<DataPoint> iterator = points.iterator();
+
+		for (int i = 0; i < result.length; i++) {
+			result[i] = iterator.next().getValue();
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public Map<DataType, List<DataPoint>> getAllPoints() {
 		return this.points;
 	}
 
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @author Rémi BARDON
+	 */
 	public List<DataPoint> getPoints(final DataType type) {
 		return this.getAllPoints().get(type);
 	}
